@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 
 // --- CONFIGURATION ---
-const WHATSAPP_NUMBER = "919787182223";
+const WHATSAPP_NUMBER = "919962919139";
 const BRAND_NAME = "Sri Shanmuga Interiors";
 
 // --- DATA ---
@@ -19,34 +19,34 @@ const HERO_IMAGES = [
 ];
 
 const SERVICES_DATA = [
-  // PVC Works
+  // UPVC Works – Interiors
   {
-    id: 'model-kitchen', category: 'PVC', title: 'Model Kitchen',
+    id: 'model-kitchen', category: 'UPVC', title: 'Model Kitchen',
     shortDesc: '100% waterproof & termite-proof modern modular kitchen setups.',
     image: "/model-kitchen-1.png", images: ["/model-kitchen-1.png", "/model-kitchen-2.png"],
-    description: 'Transform your cooking space with our premium PVC model kitchens. 100% water-resistant, termite-proof, with modern dual-tone finishes and heavy-duty hardware built to last a lifetime.',
+    description: 'Transform your cooking space with our premium UPVC model kitchens. 100% water-resistant, termite-proof, with modern dual-tone finishes and heavy-duty hardware built to last a lifetime.',
     features: ['100% Water Proof', 'Termite Resistant', 'High Gloss Finish', 'Custom Cabinets & Lofts', 'Easy to Clean', 'Soft-Close Hardware'],
   },
   {
-    id: 'pvc-cupboard', category: 'PVC', title: 'PVC Cupboard',
+    id: 'upvc-cupboard', category: 'UPVC', title: 'UPVC Cupboard',
     shortDesc: 'Stylish bedroom wardrobes, cupboards & loft storage.',
     image: "/pvc-cupboard-1.png", images: ["/pvc-cupboard-1.png", "/pvc-cupboard-2.png"],
-    description: 'Maximize your bedroom storage with custom-designed PVC cupboards and wardrobes. Complete with sleek finishes, durable handles, multi-shelf compartments, and matching overhead loft coverings.',
+    description: 'Maximize your bedroom storage with custom-designed UPVC cupboards and wardrobes. Complete with sleek finishes, durable handles, multi-shelf compartments, and matching overhead loft coverings.',
     features: ['Sliding & Openable Doors', 'Overhead Loft Storage', 'Durable Hinges & Handles', 'Termite & Moisture Resistant', 'Custom Dual-Tone Colors', 'Long-lasting Durability'],
   },
   {
-    id: 'showcases-tv-units', category: 'PVC', title: 'Showcases & TV Units',
+    id: 'showcases-tv-units', category: 'UPVC', title: 'Showcases & TV Units',
     shortDesc: 'Modern floating entertainment units, fluted panels & showcase columns.',
     image: "/tv-showcase-2.png", images: ["/tv-showcase-2.png", "/pvc-tv-unit.png"],
     description: 'Elevate your hall or living room with our designer Showcases and TV Units. Featuring modern vertical fluted louvers, marble-pattern back panels, ambient warm LED backlighting, glass-door display showcase columns, and floating console drawers.',
     features: ['Fluted Paneling & Marble Backdrop', 'Glass Display Showcase with LED', 'Curved Floating Console Drawers', 'Concealed Cable & Wire Management', '100% Termite & Moisture Resistant', 'Custom Sizing & Backlit LED Strip'],
   },
   {
-    id: 'loft-covering-work', category: 'PVC', title: 'Loft Covering Work',
+    id: 'loft-covering-work', category: 'UPVC', title: 'Loft Covering Work',
     shortDesc: 'Sleek overhead storage loft coverings in high-gloss & dual tones.',
     image: "/loft-work-1.png", images: ["/loft-work-1.png", "/loft-work-2.png"],
-    description: 'Conceal and organize overhead clutter seamlessly with our premium PVC & UPVC loft coverings. Custom fitted to your ceiling heights in vibrant high-gloss colors or elegant dual-tones to flawlessly complement your home interiors.',
-    features: ['Seamless Ceiling-to-Loft Fit', 'High-Gloss & Dual-Tone Finishes', 'Concealed Dust-Proof Closures', 'Durable Soft-Close Hinges', 'Zero Termite & Waterproof PVC', 'Custom Color Matching'],
+    description: 'Conceal and organize overhead clutter seamlessly with our premium UPVC loft coverings. Custom fitted to your ceiling heights in vibrant high-gloss colors or elegant dual-tones to flawlessly complement your home interiors.',
+    features: ['Seamless Ceiling-to-Loft Fit', 'High-Gloss & Dual-Tone Finishes', 'Concealed Dust-Proof Closures', 'Durable Soft-Close Hinges', 'Zero Termite & Waterproof UPVC', 'Custom Color Matching'],
   },
   // UPVC Works
   {
@@ -97,8 +97,8 @@ const SERVICES_DATA = [
 const GALLERY_IMAGES = [
   { url: "/model-kitchen-1.png", title: "Model Kitchen (Grey & Yellow)", category: "Model Kitchen" },
   { url: "/model-kitchen-2.png", title: "Model Kitchen (Yellow & White)", category: "Model Kitchen" },
-  { url: "/pvc-cupboard-1.png", title: "PVC Cupboard & Wardrobe", category: "PVC Cupboard" },
-  { url: "/pvc-cupboard-2.png", title: "PVC Cupboard & Loft Storage", category: "PVC Cupboard" },
+  { url: "/pvc-cupboard-1.png", title: "UPVC Cupboard & Wardrobe", category: "UPVC Cupboard" },
+  { url: "/pvc-cupboard-2.png", title: "UPVC Cupboard & Loft Storage", category: "UPVC Cupboard" },
   { url: "/tv-showcase-2.png", title: "Showcases & TV Units (Modern Floating)", category: "Showcases & TV Units" },
   { url: "/pvc-tv-unit.png", title: "Showcases & TV Units (Fluted & Marble)", category: "Showcases & TV Units" },
   { url: "/pooja-upvc-1.png", title: "Pooja Work (UPVC Gopuram Mandir)", category: "Pooja Work (UPVC)" },
@@ -115,14 +115,14 @@ const GALLERY_IMAGES = [
 ];
 
 const GALLERY_CATEGORIES = [
-  'All', 'Model Kitchen', 'PVC Cupboard', 'Showcases & TV Units',
+  'All', 'Model Kitchen', 'UPVC Cupboard', 'Showcases & TV Units',
   'Pooja Work (UPVC)', 'Loft Covering Work', 'Sliding Windows (UPVC)',
   'Open Windows (UPVC)', 'Casement Windows (UPVC)', 'Ventilator Windows (UPVC)',
 ];
 
 const HIGHLIGHTS = [
   { icon: ShieldCheck, title: '100% Waterproof', desc: 'No rotting, swelling or water damage — ever.' },
-  { icon: Hammer,      title: 'Termite Proof',   desc: 'PVC is naturally pest-free. Zero chemicals needed.' },
+  { icon: Hammer,      title: 'Termite Proof',   desc: 'UPVC is naturally pest-free. Zero chemicals needed.' },
   { icon: PenTool,     title: 'Cost Effective',  desc: 'Wood-look finish at half the price.' },
   { icon: Clock,       title: 'Quick Install',   desc: 'Full home interiors done in just 7–10 days.' },
 ];
@@ -130,19 +130,19 @@ const HIGHLIGHTS = [
 const FAQ_DATA = [
   {
     q: 'How long does a full kitchen installation take?',
-    a: 'A complete PVC model kitchen typically takes 7 to 10 working days depending on size and design complexity. We work efficiently to minimize disruption to your daily life.',
+    a: 'A complete UPVC model kitchen typically takes 7 to 10 working days depending on size and design complexity. We work efficiently to minimize disruption to your daily life.',
   },
   {
-    q: 'Is PVC material durable? What about heat in the kitchen?',
-    a: 'Yes, our high-grade PVC boards are heat-resistant up to 60°C — perfectly safe for kitchen environments. They will not warp, swell, or crack unlike wood, even in humid conditions.',
+    q: 'Is UPVC material durable? What about heat in the kitchen?',
+    a: 'Yes, our high-grade UPVC boards are heat-resistant up to 60°C — perfectly safe for kitchen environments. They will not warp, swell, or crack unlike wood, even in humid conditions.',
   },
   {
     q: 'Do you provide a warranty on your work?',
-    a: 'Absolutely! We provide a 10-year warranty on all PVC and UPVC installations including kitchens, cupboards, windows, and doors. Any manufacturing defects will be rectified free of cost.',
+    a: 'Absolutely! We provide a 10-year warranty on all UPVC installations including kitchens, cupboards, windows, and doors. Any manufacturing defects will be rectified free of cost.',
   },
   {
-    q: 'Do you serve areas outside Vadalur?',
-    a: 'Yes! We serve Vadalur, Cuddalore, Chidambaram, Panruti, Neyveli, Sethiathope, Porto Novo, Virudhachalam, and surrounding areas in Cuddalore District. Transport charges may apply for distant locations.',
+    q: 'Do you serve areas outside Ambattur?',
+    a: 'Yes! We serve Ambattur, Thiruverkadu, Poonamalle, Avadi, and surrounding areas in Thiruvallur District. Transport charges may apply for distant locations.',
   },
   {
     q: 'How do I get a free price estimate?',
@@ -192,7 +192,7 @@ const openWA = (message) => {
 
 const FloatingWAButton = () => (
   <button
-    onClick={() => openWA("Hi! I'm interested in your PVC/UPVC interior work. Please get in touch.")}
+    onClick={() => openWA("Hi! I'm interested in your UPVC interior work. Please get in touch.")}
     className="fixed bottom-6 right-6 z-50 w-16 h-16 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center shadow-2xl transition-all hover:scale-110 hover:shadow-green-500/40"
     title="Chat on WhatsApp"
     aria-label="WhatsApp Chat"
@@ -424,7 +424,7 @@ const HomePage = ({ setPage, setSelectedService }) => {
         <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
           <div className="animate-fade-in-up max-w-4xl">
             <span className="inline-block bg-yellow-400/15 text-yellow-300 border border-yellow-400/30 px-5 py-1.5 rounded-full text-sm font-bold mb-6 backdrop-blur-sm">
-              ✦ PVC • UPVC • Aluminium Specialists
+              ✦ UPVC Specialists – Ambattur & Thiruvallur
             </span>
             <h1 className="text-5xl sm:text-6xl md:text-7xl font-black text-white mb-5 leading-tight tracking-tight drop-shadow-lg">
               Modern Interiors.<br />
@@ -474,12 +474,12 @@ const HomePage = ({ setPage, setSelectedService }) => {
             <h2 className="text-4xl font-black text-slate-900 mt-3 mb-4">
               The Smart Choice for <span className="text-yellow-500">Modern Homes</span>
             </h2>
-            <p className="text-slate-500 max-w-xl mx-auto">PVC & UPVC interiors that look stunning, last decades, and cost less than traditional wood.</p>
+            <p className="text-slate-500 max-w-xl mx-auto">UPVC interiors that look stunning, last decades, and cost less than traditional wood.</p>
           </SectionReveal>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               { icon: ShieldCheck, title: "100% Waterproof", desc: "Never worry about water damage in kitchens, bathrooms, or during monsoons.", accent: "bg-blue-50", iconColor: "text-blue-500" },
-              { icon: Hammer, title: "Termite Proof", desc: "PVC is naturally pest-resistant. No chemicals or annual spraying needed.", accent: "bg-orange-50", iconColor: "text-orange-500" },
+              { icon: Hammer, title: "Termite Proof", desc: "UPVC is naturally pest-resistant. No chemicals or annual spraying needed.", accent: "bg-orange-50", iconColor: "text-orange-500" },
               { icon: PenTool, title: "Cost Effective", desc: "Premium wood-look finish at half the price. Smart investment for any budget.", accent: "bg-green-50", iconColor: "text-green-500" },
               { icon: Clock, title: "7–10 Day Install", desc: "Minimal disruption. Complete home interiors done faster than you'd expect.", accent: "bg-purple-50", iconColor: "text-purple-500" },
             ].map((item, idx) => (
@@ -503,7 +503,7 @@ const HomePage = ({ setPage, setSelectedService }) => {
           <SectionReveal className="text-center mb-16">
             <span className="text-yellow-600 font-bold tracking-widest text-xs uppercase">What We Do</span>
             <h2 className="text-4xl font-black text-slate-900 mt-3 mb-4">Our Services</h2>
-            <p className="text-slate-500 max-w-xl mx-auto">Specialized in PVC, UPVC & Aluminium works for homes and offices across Cuddalore District.</p>
+            <p className="text-slate-500 max-w-xl mx-auto">Specialized in UPVC works for homes and offices across Thiruvallur District.</p>
           </SectionReveal>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
@@ -548,7 +548,7 @@ const HomePage = ({ setPage, setSelectedService }) => {
             <div>
               <span className="text-yellow-600 font-bold tracking-widest text-xs uppercase">Our Work</span>
               <h2 className="text-4xl font-black text-slate-900 mt-3">Recent Projects</h2>
-              <p className="text-slate-500 mt-2">A glimpse of finished sites across Cuddalore District.</p>
+              <p className="text-slate-500 mt-2">A glimpse of finished sites across Thiruvallur District.</p>
             </div>
             <button onClick={() => setPage('gallery')} className="text-yellow-600 font-bold flex items-center gap-2 hover:gap-3 transition-all shrink-0 group">
               Full Portfolio <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
@@ -607,7 +607,7 @@ const HomePage = ({ setPage, setSelectedService }) => {
 // --- SERVICES PAGE ---
 const ServicesPage = ({ setSelectedService, setPage }) => {
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const categories = ['All', 'PVC', 'UPVC', 'Aluminium'];
+  const categories = ['All', 'UPVC', 'Aluminium'];
   const filteredServices = selectedCategory === 'All' ? SERVICES_DATA : SERVICES_DATA.filter(s => s.category === selectedCategory);
 
   return (
@@ -617,7 +617,7 @@ const ServicesPage = ({ setSelectedService, setPage }) => {
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-600 via-yellow-400 to-yellow-600" />
         <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full bg-yellow-400/5 blur-3xl pointer-events-none" />
         <h1 className="text-5xl font-black text-white mb-3 relative">Our Services</h1>
-        <p className="text-slate-400 max-w-xl mx-auto text-lg relative">Expert PVC, UPVC & Aluminium works for homes and offices.</p>
+        <p className="text-slate-400 max-w-xl mx-auto text-lg relative">Expert UPVC works for homes and offices in Thiruvallur District.</p>
       </div>
 
       <div className="container mx-auto px-6 py-14">
@@ -875,8 +875,8 @@ const ContactPage = () => {
             </SectionReveal>
             <div className="space-y-4">
               {[
-                { icon: MapPin, label: 'Workshop Address', value: 'Vadalur, Tamil Nadu – 607303\n(Cuddalore District)', color: 'text-red-500', bg: 'bg-red-50' },
-                { icon: Phone, label: 'Call / WhatsApp', value: '+91 97871 82223', color: 'text-green-600', bg: 'bg-green-50' },
+                { icon: MapPin, label: 'Workshop Address', value: 'Ambattur, Tamil Nadu\n(Thiruvallur District)', color: 'text-red-500', bg: 'bg-red-50' },
+                { icon: Phone, label: 'Call / WhatsApp', value: '+91 99629 19139', color: 'text-green-600', bg: 'bg-green-50' },
                 { icon: Mail, label: 'Email', value: 'contact@srishanmuga.com', color: 'text-blue-500', bg: 'bg-blue-50' },
                 { icon: Clock, label: 'Working Hours', value: 'Monday – Saturday: 9 AM – 7 PM\nSunday: By Appointment', color: 'text-yellow-600', bg: 'bg-yellow-50' },
               ].map((item, idx) => (
@@ -901,7 +901,7 @@ const ContactPage = () => {
                   <MapPin size={18} className="text-yellow-600" /> Areas We Serve
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {['Vadalur', 'Cuddalore', 'Chidambaram', 'Panruti', 'Neyveli', 'Sethiathope', 'Porto Novo', 'Virudhachalam'].map(area => (
+                  {['Ambattur', 'Thiruverkadu', 'Poonamalle', 'Avadi'].map(area => (
                     <span key={area} className="bg-white border border-yellow-200 text-slate-700 text-sm px-3 py-1.5 rounded-full font-semibold shadow-sm">{area}</span>
                   ))}
                 </div>
@@ -944,7 +944,7 @@ const ContactPage = () => {
               <div>
                 <label className="text-sm font-bold text-slate-700 mb-1.5 block">Your Requirement</label>
                 <textarea
-                  placeholder="e.g. I need a PVC kitchen and cupboard for my 2BHK house in Cuddalore..."
+                  placeholder="e.g. I need a UPVC kitchen and cupboard for my 2BHK house in Ambattur..."
                   value={formData.requirement}
                   onChange={e => setFormData(p => ({ ...p, requirement: e.target.value }))}
                   className="w-full px-4 py-3.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent bg-slate-50 text-slate-800 h-32 resize-none font-medium transition-all"
@@ -989,7 +989,7 @@ const Footer = ({ navigate }) => (
             <span className="text-xl font-black bg-gradient-to-r from-yellow-200 to-yellow-500 text-transparent bg-clip-text">{BRAND_NAME}</span>
           </div>
           <p className="text-sm leading-relaxed max-w-xs text-slate-500 mb-6">
-            Transforming homes across Cuddalore District with premium PVC, UPVC & Aluminium interiors.
+            Transforming homes across Thiruvallur District with premium UPVC interiors.
             Waterproof • Termite-proof • 10-Year Warranty.
           </p>
           <div className="flex gap-3">
@@ -1019,7 +1019,7 @@ const Footer = ({ navigate }) => (
         <div>
           <h4 className="text-white font-black mb-5 text-xs uppercase tracking-widest">Service Areas</h4>
           <ul className="space-y-2.5 text-sm">
-            {['Vadalur', 'Cuddalore', 'Chidambaram', 'Panruti', 'Neyveli', 'Virudhachalam'].map(area => (
+            {['Ambattur', 'Thiruverkadu', 'Poonamalle', 'Avadi'].map(area => (
               <li key={area} className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 shrink-0" /> {area}
               </li>
@@ -1030,7 +1030,7 @@ const Footer = ({ navigate }) => (
 
       <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-600">
         <p>© {new Date().getFullYear()} {BRAND_NAME}. All rights reserved.</p>
-        <p className="flex items-center gap-1.5"><MapPin size={12} className="text-yellow-600" /> Serving Cuddalore District, Tamil Nadu</p>
+        <p className="flex items-center gap-1.5"><MapPin size={12} className="text-yellow-600" /> Serving Thiruvallur District, Tamil Nadu</p>
       </div>
     </div>
   </footer>
