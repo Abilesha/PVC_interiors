@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Menu, X, Phone, MapPin, Hammer, Ruler, ShieldCheck,
   ArrowRight, ChevronLeft, CheckCircle, ChevronDown, ChevronUp,
   Instagram, Facebook, Mail, PenTool, Clock, ZoomIn, ChevronRight,
-  Search, Check, Sparkles, Navigation,
 } from 'lucide-react';
 
 // --- CONFIGURATION ---
@@ -14,7 +13,7 @@ const BRAND_NAME = "Sri Shanmuga Interiors";
 
 // --- ALL USER SERVICE AREAS (23 Locations) ---
 const SERVICE_AREAS = [
-  { name: 'Perambur', speed: 'Same Day / 24h Visit', popular: 'Modular Kitchen & UPVC Cupboards' },
+  { name: 'Perambur', speed: 'Same Day / 24h Visit', popular: 'Model Kitchen & UPVC Cupboards' },
   { name: 'Villivakam', speed: 'Same Day / 24h Visit', popular: 'Sliding Windows & Wardrobes' },
   { name: 'Korattur', speed: 'Same Day / 24h Visit', popular: 'Modular Kitchen & TV Units' },
   { name: 'Kolathur', speed: 'Same Day / 24h Visit', popular: 'UPVC Windows & Mandir Work' },
@@ -303,125 +302,6 @@ const TopBar = () => (
   </div>
 );
 
-// --- SERVICE AREAS SECTION (Interactive & Local SEO) ---
-const ServiceAreasSection = ({ isFullPage = false }) => {
-  const [search, setSearch] = useState('');
-
-  const filteredAreas = useMemo(() => {
-    return SERVICE_AREAS.filter(area =>
-      area.name.toLowerCase().includes(search.toLowerCase()) ||
-      area.popular.toLowerCase().includes(search.toLowerCase())
-    );
-  }, [search]);
-
-  return (
-    <section id="service-areas" className={`py-20 text-white relative overflow-hidden ${isFullPage ? 'bg-slate-950 min-h-screen pt-32' : 'bg-gradient-to-b from-slate-900 via-slate-950 to-slate-900'}`}>
-      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-600 via-yellow-400 to-yellow-600" />
-      <div className="absolute -top-40 -left-40 w-96 h-96 bg-yellow-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-yellow-500/10 rounded-full blur-3xl pointer-events-none" />
-
-      <div className="container mx-auto px-6 relative z-10">
-        <SectionReveal className="text-center max-w-3xl mx-auto mb-12">
-          <span className="inline-flex items-center gap-1.5 bg-yellow-400/15 border border-yellow-400/30 text-yellow-300 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-4">
-            <Navigation size={14} /> 23 Dedicated Service Areas
-          </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 leading-tight">
-            UPVC & PVC Interiors <span className="text-yellow-400">Near You</span>
-          </h2>
-          <p className="text-slate-300 text-base md:text-lg leading-relaxed">
-            We provide free doorstep measurement, design consultation, and rapid 7–10 days installation in all 23 areas below. Call <a href={`tel:${PHONE_NUMBER}`} className="text-yellow-400 font-bold underline">{PHONE_NUMBER}</a> for an instant site visit.
-          </p>
-        </SectionReveal>
-
-        {/* Search Bar */}
-        <div className="max-w-2xl mx-auto mb-10">
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
-            <input
-              type="text"
-              placeholder="Search your location (e.g. Perambur, Villivakam, Anna nagar, Porur, Kolathur...)"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-12 pr-4 py-3.5 bg-slate-800/90 border border-slate-700 rounded-2xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm font-medium transition-all shadow-inner"
-            />
-          </div>
-        </div>
-
-        {/* 23 Service Area Cards */}
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-12">
-          {filteredAreas.map((area, idx) => (
-            <SectionReveal key={area.name} delay={(idx % 6) * 40}
-              className="group p-5 bg-slate-800/60 hover:bg-slate-800 rounded-2xl border border-slate-700/80 hover:border-yellow-400 transition-all duration-300 flex flex-col justify-between shadow-lg hover:-translate-y-1"
-            >
-              <div>
-                <div className="flex items-center justify-between gap-2 mb-2">
-                  <h3 className="font-black text-lg text-white group-hover:text-yellow-400 transition-colors flex items-center gap-1.5">
-                    <MapPin size={16} className="text-yellow-400 shrink-0" />
-                    {area.name}
-                  </h3>
-                  <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-green-500/10 text-green-300 border border-green-500/20 shrink-0">
-                    Free Visit
-                  </span>
-                </div>
-                <p className="text-xs text-slate-400 mb-1 flex items-center gap-1">
-                  <Clock size={12} className="text-yellow-400" /> Response: <span className="text-slate-200 font-semibold">{area.speed}</span>
-                </p>
-                <p className="text-xs text-slate-300 mb-4 font-medium line-clamp-1">
-                  ★ Popular: {area.popular}
-                </p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-700/60">
-                <button
-                  onClick={() => openWA(`Hi Sri Shanmuga Interiors, I need UPVC interior work in ${area.name}. Please arrange a free site visit.`)}
-                  className="bg-green-600 hover:bg-green-500 text-white text-xs font-bold py-2 px-2 rounded-xl flex items-center justify-center gap-1 transition-colors"
-                >
-                  <WAIcon className="w-3.5 h-3.5" /> Quote
-                </button>
-                <a
-                  href={`tel:${PHONE_NUMBER}`}
-                  className="bg-yellow-400 hover:bg-yellow-300 text-slate-950 text-xs font-black py-2 px-2 rounded-xl flex items-center justify-center gap-1 transition-colors"
-                >
-                  <Phone size={13} /> Call
-                </a>
-              </div>
-            </SectionReveal>
-          ))}
-        </div>
-
-        {filteredAreas.length === 0 && (
-          <div className="text-center py-10 bg-slate-800/40 rounded-2xl border border-slate-700 mb-10">
-            <p className="text-slate-300 text-sm mb-3">No matching location found in the filter.</p>
-            <p className="text-white font-bold mb-4">We cover all 23 primary service areas across Chennai!</p>
-            <a
-              href={`tel:${PHONE_NUMBER}`}
-              className="inline-flex items-center gap-2 bg-yellow-400 text-slate-950 font-black px-6 py-2.5 rounded-full text-sm hover:bg-yellow-300 transition-all"
-            >
-              <Phone size={16} /> Call {PHONE_NUMBER} Directly
-            </a>
-          </div>
-        )}
-
-        {/* SEO Bottom Card */}
-        <div className="bg-slate-900/90 border border-yellow-400/30 rounded-2xl p-6 text-center max-w-4xl mx-auto backdrop-blur-sm">
-          <h4 className="text-sm font-black text-yellow-400 uppercase tracking-wider mb-2">
-            Chennai's Best UPVC & PVC Interior Specialists Near You
-          </h4>
-          <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mb-4">
-            Looking for a <strong>waterproof UPVC modular kitchen</strong> in Perambur, Villivakam, or Korattur? Need <strong>custom bedroom cupboards or sliding windows</strong> in Anna nagar, Porur, or Kolathur? Call <strong>{PHONE_NUMBER}</strong> for doorstep design consultation, laser measurements, and direct workshop prices.
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-bold text-slate-300">
-            <span className="flex items-center gap-1 text-yellow-400"><CheckCircle size={14} /> 10-Year Written Warranty</span>
-            <span className="flex items-center gap-1 text-yellow-400"><CheckCircle size={14} /> 100% Water & Termite Proof</span>
-            <span className="flex items-center gap-1 text-yellow-400"><CheckCircle size={14} /> 7–10 Days Installation</span>
-            <span className="flex items-center gap-1 text-yellow-400"><Phone size={14} /> Call: {PHONE_NUMBER}</span>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
 // --- NAVBAR ---
 const Navbar = ({ setPage, currentPage }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -467,7 +347,6 @@ const Navbar = ({ setPage, currentPage }) => {
         <div className="hidden lg:flex items-center gap-7">
           <NavItem page="home" label="Home" />
           <NavItem page="services" label="Services" />
-          <NavItem page="areas" label="Service Areas (23)" />
           <NavItem page="gallery" label="Portfolio" />
           <NavItem page="contact" label="Contact" />
           
@@ -508,7 +387,7 @@ const Navbar = ({ setPage, currentPage }) => {
       {isOpen && (
         <div className="lg:hidden bg-white border-t border-slate-100 shadow-2xl">
           <div className="flex flex-col p-6 gap-4">
-            {[['home', 'Home'], ['services', 'Services'], ['areas', 'Service Areas (23 Locations)'], ['gallery', 'Portfolio'], ['contact', 'Contact Us']].map(([p, l]) => (
+            {[['home', 'Home'], ['services', 'Services'], ['gallery', 'Portfolio'], ['contact', 'Contact Us']].map(([p, l]) => (
               <button key={p} onClick={() => handleNav(p)} className={`text-left font-bold text-base ${currentPage === p ? 'text-yellow-600' : 'text-slate-700'}`}>{l}</button>
             ))}
             
@@ -631,7 +510,7 @@ const HomePage = ({ setPage, setSelectedService }) => {
               100% Waterproof • Termite-Proof • 10-Year Warranty.
             </p>
 
-            {/* Quick Service Areas Ticker Pill */}
+            {/* Service Areas Ticker Pill */}
             <div className="mb-8 p-3 bg-slate-900/80 border border-yellow-400/30 rounded-2xl max-w-3xl mx-auto text-xs text-slate-300">
               <span className="text-yellow-400 font-bold uppercase mr-1">📍 Service Areas:</span>
               <span>Perambur, Villivakam, Korattur, Kolathur, Annanur, Aiyapakkam, Velappanjavadi, Pudhur, Red hills, Aiynavaram, Purasaivakkam, Anna nagar, Kaaduvetti, Karayanjavadi, Oragadam, Kallikuppam, Thirumulavayil, Argimedu, Paruthipattu, Kannapalayam, Porur, Madhuravayal, Kattupakkam.</span>
@@ -651,10 +530,10 @@ const HomePage = ({ setPage, setSelectedService }) => {
                 <WAIcon className="w-5 h-5" /> WhatsApp Quote
               </button>
               <button
-                onClick={() => setPage('areas')}
+                onClick={() => setPage('gallery')}
                 className="w-full sm:w-auto border-2 border-white/40 hover:border-yellow-400 text-white hover:text-yellow-400 px-7 py-3.5 rounded-full font-bold text-base backdrop-blur-sm transition-all hover:bg-white/5"
               >
-                View 23 Service Areas
+                View Our Work
               </button>
             </div>
           </div>
@@ -754,10 +633,7 @@ const HomePage = ({ setPage, setSelectedService }) => {
         </div>
       </section>
 
-      {/* ── 4. SERVICE AREAS SECTION (All 23 Locations) ── */}
-      <ServiceAreasSection isFullPage={false} />
-
-      {/* ── 5. PORTFOLIO MARQUEE ── */}
+      {/* ── 4. PORTFOLIO MARQUEE ── */}
       <section className="py-24 bg-white overflow-hidden">
         <div className="container mx-auto px-6 mb-12">
           <SectionReveal className="flex flex-col md:flex-row justify-between items-end gap-4">
@@ -786,7 +662,7 @@ const HomePage = ({ setPage, setSelectedService }) => {
         </div>
       </section>
 
-      {/* ── 6. CTA BANNER ── */}
+      {/* ── 5. CTA BANNER ── */}
       <section className="py-24 bg-slate-900 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <img src={HERO_IMAGES[1]} alt="" className="w-full h-full object-cover" />
@@ -803,7 +679,7 @@ const HomePage = ({ setPage, setSelectedService }) => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href={`tel:${PHONE_NUMBER}`}
-              className="bg-yellow-400 hover:bg-yellow-300 text-slate-900 px-9 py-4 rounded-full font-black text-lg shadow-2xl transition-all hover:scale-105 flex items-center justify-center gap-2"
+              className="bg-yellow-400 hover:bg-yellow-300 text-slate-950 px-9 py-4 rounded-full font-black text-lg shadow-2xl transition-all hover:scale-105 flex items-center justify-center gap-2"
             >
               <Phone size={20} /> Call {PHONE_NUMBER}
             </a>
@@ -1287,7 +1163,7 @@ const Footer = ({ navigate }) => (
         <div>
           <h4 className="text-white font-black mb-5 text-xs uppercase tracking-widest">Quick Links</h4>
           <ul className="space-y-3 text-sm">
-            {[['home', 'Home'], ['services', 'Our Services'], ['areas', 'Service Areas (23)'], ['gallery', 'Project Portfolio'], ['contact', 'Contact Us']].map(([page, label]) => (
+            {[['home', 'Home'], ['services', 'Our Services'], ['gallery', 'Project Portfolio'], ['contact', 'Contact Us']].map(([page, label]) => (
               <li key={page}>
                 <button onClick={() => { navigate(page); window.scrollTo(0, 0); }} className="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
                   <span className="w-1 h-1 rounded-full bg-yellow-600 group-hover:bg-yellow-400 transition-colors" /> {label}
@@ -1362,7 +1238,6 @@ const App = () => {
 
       <main className="page-fade">
         {currentPage === 'home' && <HomePage setPage={navigate} setSelectedService={setSelectedService} />}
-        {currentPage === 'areas' && <ServiceAreasSection isFullPage={true} />}
         {currentPage === 'services' && <ServicesPage setSelectedService={setSelectedService} setPage={navigate} />}
         {currentPage === 'service-detail' && <ServiceDetailPage service={selectedService} setPage={navigate} setSelectedService={setSelectedService} />}
         {currentPage === 'gallery' && <GalleryPage />}
