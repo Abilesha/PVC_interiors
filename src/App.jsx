@@ -49,24 +49,24 @@ const HERO_IMAGES = [
 
 const SERVICES_DATA = [
   {
-    id: 'model-kitchen', category: 'UPVC', title: 'Model Kitchen',
-    shortDesc: '100% waterproof & termite-proof modern modular kitchen setups.',
+    id: 'model-kitchen', category: 'UPVC & PVC', categories: ['UPVC', 'PVC'], title: 'Model Kitchen',
+    shortDesc: '100% waterproof & termite-proof modern modular kitchen setups in UPVC & PVC.',
     image: "/model-kitchen-1.png", images: ["/model-kitchen-1.png", "/model-kitchen-2.png"],
-    description: 'Transform your cooking space with our premium UPVC model kitchens. 100% water-resistant, termite-proof, with modern dual-tone finishes and heavy-duty hardware built to last a lifetime.',
+    description: 'Transform your cooking space with our premium UPVC & PVC model kitchens. 100% water-resistant, termite-proof, with modern dual-tone finishes and heavy-duty hardware built to last a lifetime.',
     features: ['100% Water Proof', 'Termite Resistant', 'High Gloss Finish', 'Custom Cabinets & Lofts', 'Easy to Clean', 'Soft-Close Hardware'],
   },
   {
-    id: 'upvc-cupboard', category: 'UPVC', title: 'UPVC Cupboard',
+    id: 'upvc-cupboard', category: 'UPVC', categories: ['UPVC'], title: 'UPVC Cupboard',
     shortDesc: 'Stylish bedroom wardrobes, cupboards & loft storage.',
     image: "/pvc-cupboard-1.png", images: ["/pvc-cupboard-1.png", "/pvc-cupboard-2.png"],
     description: 'Maximize your bedroom storage with custom-designed UPVC cupboards and wardrobes. Complete with sleek finishes, durable handles, multi-shelf compartments, and matching overhead loft coverings.',
     features: ['Sliding & Openable Doors', 'Overhead Loft Storage', 'Durable Hinges & Handles', 'Termite & Moisture Resistant', 'Custom Dual-Tone Colors', 'Long-lasting Durability'],
   },
   {
-    id: 'showcases-tv-units', category: 'UPVC', title: 'Showcases & TV Units',
-    shortDesc: 'Modern floating entertainment units, fluted panels & showcase columns.',
+    id: 'showcases-tv-units', category: 'UPVC & PVC', categories: ['UPVC', 'PVC'], title: 'Showcases & TV Units',
+    shortDesc: 'Modern floating entertainment units, fluted panels & showcase columns in UPVC & PVC.',
     image: "/tv-showcase-2.png", images: ["/tv-showcase-2.png", "/pvc-tv-unit.png"],
-    description: 'Elevate your hall or living room with our designer Showcases and TV Units. Featuring modern vertical fluted louvers, marble-pattern back panels, ambient warm LED backlighting, glass-door display showcase columns, and floating console drawers.',
+    description: 'Elevate your hall or living room with our designer UPVC & PVC Showcases and TV Units. Featuring modern vertical fluted louvers, marble-pattern back panels, ambient warm LED backlighting, glass-door display showcase columns, and floating console drawers.',
     features: ['Fluted Paneling & Marble Backdrop', 'Glass Display Showcase with LED', 'Curved Floating Console Drawers', 'Concealed Cable & Wire Management', '100% Termite & Moisture Resistant', 'Custom Sizing & Backlit LED Strip'],
   },
   {
@@ -153,7 +153,7 @@ const FAQ_DATA = [
   },
   {
     q: 'How long does a complete kitchen or cupboard installation take?',
-    a: 'A complete UPVC model kitchen or bedroom cupboard typically takes 7 to 10 working days. We manufacture and pre-fit components at our workshop so onsite fitting takes only 1 to 2 days without mess.',
+    a: 'A complete UPVC or PVC model kitchen, cupboard or TV unit typically takes 3 to 10 working days. We manufacture and pre-fit components at our workshop so onsite fitting takes only 1 to 2 days without mess.',
   },
   {
     q: 'Why should I choose UPVC over wood or plywood in Chennai weather?',
@@ -565,7 +565,7 @@ const HomePage = ({ setPage, setSelectedService }) => {
               { icon: ShieldCheck, title: "100% Waterproof", desc: "Never worry about water damage in kitchens, bathrooms, or during monsoons.", accent: "bg-blue-50", iconColor: "text-blue-500" },
               { icon: Hammer, title: "Termite Proof", desc: "UPVC is naturally pest-resistant. No chemicals or annual spraying needed.", accent: "bg-orange-50", iconColor: "text-orange-500" },
               { icon: PenTool, title: "Cost Effective", desc: "Premium wood-look finish at half the price. Smart investment for any budget.", accent: "bg-green-50", iconColor: "text-green-500" },
-              { icon: Clock, title: "7–10 Day Install", desc: "Minimal disruption. Complete home interiors done faster than you'd expect.", accent: "bg-purple-50", iconColor: "text-purple-500" },
+              { icon: Clock, title: "3–10 Day Install", desc: "Minimal disruption. Complete home interiors done faster than you'd expect.", accent: "bg-purple-50", iconColor: "text-purple-500" },
             ].map((item, idx) => (
               <SectionReveal key={idx} delay={idx * 100}
                 className="group p-7 bg-slate-50 rounded-2xl border border-slate-100 hover:border-yellow-200 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-default"
@@ -705,8 +705,12 @@ const HomePage = ({ setPage, setSelectedService }) => {
 // --- SERVICES PAGE ---
 const ServicesPage = ({ setSelectedService, setPage }) => {
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const categories = ['All', 'UPVC', 'Aluminium'];
-  const filteredServices = selectedCategory === 'All' ? SERVICES_DATA : SERVICES_DATA.filter(s => s.category === selectedCategory);
+  const categories = ['All', 'UPVC', 'PVC', 'Aluminium'];
+  const filteredServices = selectedCategory === 'All'
+    ? SERVICES_DATA
+    : SERVICES_DATA.filter(s =>
+        s.categories ? s.categories.includes(selectedCategory) : (s.category === selectedCategory || s.category.includes(selectedCategory))
+      );
 
   return (
     <div className="min-h-screen bg-slate-50 pt-20">
