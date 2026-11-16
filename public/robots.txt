@@ -1,0 +1,10 @@
+# Robots.txt for Sri Shanmuga Interiors (UPVC & PVC Interiors)
+User-agent: *
+Allow: /
+Disallow:
+
+# Crawl delay (optional, polite crawling)
+Crawl-delay: 1
+
+# Sitemaps
+Sitemap: https://srishanmugainteriors.com/sitemap.xml

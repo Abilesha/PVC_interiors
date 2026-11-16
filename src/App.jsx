@@ -1,15 +1,45 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import {
   Menu, X, Phone, MapPin, Hammer, Ruler, ShieldCheck,
   ArrowRight, ChevronLeft, CheckCircle, ChevronDown, ChevronUp,
   Instagram, Facebook, Mail, PenTool, Clock, ZoomIn, ChevronRight,
+  Search, Check, Sparkles, Navigation,
 } from 'lucide-react';
 
 // --- CONFIGURATION ---
-const WHATSAPP_NUMBER = "919962919139";
+const PHONE_NUMBER = "9499009409";
+const PHONE_DISPLAY = "+91 94990 09409";
+const WHATSAPP_NUMBER = "919499009409";
 const BRAND_NAME = "Sri Shanmuga Interiors";
 
-// --- DATA ---
+// --- ALL USER SERVICE AREAS (23 Locations) ---
+const SERVICE_AREAS = [
+  { name: 'Perambur', speed: 'Same Day / 24h Visit', popular: 'Modular Kitchen & UPVC Cupboards' },
+  { name: 'Villivakam', speed: 'Same Day / 24h Visit', popular: 'Sliding Windows & Wardrobes' },
+  { name: 'Korattur', speed: 'Same Day / 24h Visit', popular: 'Modular Kitchen & TV Units' },
+  { name: 'Kolathur', speed: 'Same Day / 24h Visit', popular: 'UPVC Windows & Mandir Work' },
+  { name: 'Annanur', speed: 'Same Day / 24h Visit', popular: 'Loft Covering & Cupboards' },
+  { name: 'Aiyapakkam', speed: 'Same Day / 24h Visit', popular: 'Waterproof Kitchen Cabinets' },
+  { name: 'Velappanjavadi', speed: 'Same Day / 24h Visit', popular: 'Sliding Windows & Grills' },
+  { name: 'Pudhur', speed: 'Same Day / 24h Visit', popular: 'UPVC Cupboards & Lofts' },
+  { name: 'Red hills', speed: 'Same Day / 24h Visit', popular: 'Full Home UPVC Interiors' },
+  { name: 'Aiynavaram', speed: 'Same Day / 24h Visit', popular: 'Model Kitchen & Cupboards' },
+  { name: 'Purasaivakkam', speed: 'Same Day / 24h Visit', popular: 'Designer TV Units & Mandirs' },
+  { name: 'Anna nagar', speed: 'Same Day / 24h Visit', popular: 'Luxury UPVC Modular Kitchens' },
+  { name: 'Kaaduvetti', speed: 'Same Day / 24h Visit', popular: 'UPVC Windows & Partitions' },
+  { name: 'Karayanjavadi', speed: 'Same Day / 24h Visit', popular: 'Cupboards & Bedroom Storage' },
+  { name: 'Oragadam', speed: 'Same Day / 24h Visit', popular: 'Full Flat UPVC Setup' },
+  { name: 'Kallikuppam', speed: 'Same Day / 24h Visit', popular: 'Model Kitchen & Loft Work' },
+  { name: 'Thirumulavayil', speed: 'Same Day / 24h Visit', popular: 'Waterproof Interiors & Windows' },
+  { name: 'Argimedu', speed: 'Same Day / 24h Visit', popular: 'Cupboards & Pooja Units' },
+  { name: 'Paruthipattu', speed: 'Same Day / 24h Visit', popular: 'Sliding Windows & Kitchen' },
+  { name: 'Kannapalayam', speed: 'Same Day / 24h Visit', popular: 'Loft Storage & TV Units' },
+  { name: 'Porur', speed: 'Same Day / 24h Visit', popular: 'UPVC Modular Kitchen & Cupboards' },
+  { name: 'Madhuravayal', speed: 'Same Day / 24h Visit', popular: 'Bedroom Wardrobes & Windows' },
+  { name: 'Kattupakkam', speed: 'Same Day / 24h Visit', popular: 'TV Units & Pooja Mandir' },
+];
+
+// --- HERO IMAGES ---
 const HERO_IMAGES = [
   "/tv-showcase-2.png",
   "/model-kitchen-2.png",
@@ -19,7 +49,6 @@ const HERO_IMAGES = [
 ];
 
 const SERVICES_DATA = [
-  // UPVC Works – Interiors
   {
     id: 'model-kitchen', category: 'UPVC', title: 'Model Kitchen',
     shortDesc: '100% waterproof & termite-proof modern modular kitchen setups.',
@@ -48,7 +77,6 @@ const SERVICES_DATA = [
     description: 'Conceal and organize overhead clutter seamlessly with our premium UPVC loft coverings. Custom fitted to your ceiling heights in vibrant high-gloss colors or elegant dual-tones to flawlessly complement your home interiors.',
     features: ['Seamless Ceiling-to-Loft Fit', 'High-Gloss & Dual-Tone Finishes', 'Concealed Dust-Proof Closures', 'Durable Soft-Close Hinges', 'Zero Termite & Waterproof UPVC', 'Custom Color Matching'],
   },
-  // UPVC Works
   {
     id: 'pooja-work-upvc', category: 'UPVC', title: 'Pooja Work (UPVC)',
     shortDesc: 'Sacred UPVC Mandirs with CNC jali, bells & backlit motifs.',
@@ -84,7 +112,6 @@ const SERVICES_DATA = [
     description: 'Our UPVC ventilator windows feature adjustable horizontal louvers for steady airflow while maintaining privacy. Available in compact louvered frames (interior) and square exterior louvered panels.',
     features: ['Adjustable Horizontal Louvers', 'Interior & Exterior Models', 'Privacy Without Blocking Airflow', 'Dust & Rain Resistant', 'Compact & Easy Install', 'Weatherproof UPVC Frame'],
   },
-  // Aluminium
   {
     id: 'aluminium-partition', category: 'Aluminium', title: 'Aluminium Partitions',
     shortDesc: 'Durable aluminium office & commercial partition systems.',
@@ -120,33 +147,26 @@ const GALLERY_CATEGORIES = [
   'Open Windows (UPVC)', 'Casement Windows (UPVC)', 'Ventilator Windows (UPVC)',
 ];
 
-const HIGHLIGHTS = [
-  { icon: ShieldCheck, title: '100% Waterproof', desc: 'No rotting, swelling or water damage — ever.' },
-  { icon: Hammer,      title: 'Termite Proof',   desc: 'UPVC is naturally pest-free. Zero chemicals needed.' },
-  { icon: PenTool,     title: 'Cost Effective',  desc: 'Wood-look finish at half the price.' },
-  { icon: Clock,       title: 'Quick Install',   desc: 'Full home interiors done in just 7–10 days.' },
-];
-
 const FAQ_DATA = [
   {
-    q: 'How long does a full kitchen installation take?',
-    a: 'A complete UPVC model kitchen typically takes 7 to 10 working days depending on size and design complexity. We work efficiently to minimize disruption to your daily life.',
+    q: 'What service areas do you cover for UPVC and PVC interiors?',
+    a: 'We actively provide free doorstep measurements and installation in: Perambur, Villivakam, Korattur, Kolathur, Annanur, Aiyapakkam, Velappanjavadi, Pudhur, Red hills, Aiynavaram, Purasaivakkam, Anna nagar, Kaaduvetti, Karayanjavadi, Oragadam, Kallikuppam, Thirumulavayil, Argimedu, Paruthipattu, Kannapalayam, Porur, Madhuravayal, and Kattupakkam. Call 9499009409 for immediate site visits!',
   },
   {
-    q: 'Is UPVC material durable? What about heat in the kitchen?',
-    a: 'Yes, our high-grade UPVC boards are heat-resistant up to 60°C — perfectly safe for kitchen environments. They will not warp, swell, or crack unlike wood, even in humid conditions.',
+    q: 'How long does a complete kitchen or cupboard installation take?',
+    a: 'A complete UPVC model kitchen or bedroom cupboard typically takes 7 to 10 working days. We manufacture and pre-fit components at our workshop so onsite fitting takes only 1 to 2 days without mess.',
   },
   {
-    q: 'Do you provide a warranty on your work?',
-    a: 'Absolutely! We provide a 10-year warranty on all UPVC installations including kitchens, cupboards, windows, and doors. Any manufacturing defects will be rectified free of cost.',
+    q: 'Why should I choose UPVC over wood or plywood in Chennai weather?',
+    a: 'UPVC is 100% waterproof and 100% termite-proof. It does not swell, warp, crack, or catch fungus during monsoons or high humidity. It costs significantly less than wood while lasting for decades.',
   },
   {
-    q: 'Do you serve areas outside Ambattur?',
-    a: 'Yes! We serve Ambattur, Thiruverkadu, Poonamalle, Avadi, and surrounding areas in Thiruvallur District. Transport charges may apply for distant locations.',
+    q: 'Do you offer a warranty on your work?',
+    a: 'Yes, Sri Shanmuga Interiors provides a written 10-year warranty on all our UPVC installations, including kitchen cabinets, cupboards, sliding windows, and pooja units.',
   },
   {
-    q: 'How do I get a free price estimate?',
-    a: 'Simply click "Get Free Quote" or use the Contact form. Share your room measurements and photos — we will provide a detailed estimate within 24 hours, completely free.',
+    q: 'How do I contact you for a free estimate or site visit?',
+    a: 'Simply call us at 9499009409 or click the WhatsApp button. We will schedule a free doorstep visit with 3D design catalogs and exact measurements.',
   },
 ];
 
@@ -159,18 +179,22 @@ const useCountUp = (target, isVisible, duration = 2000) => {
     const step = target / (duration / 16);
     const timer = setInterval(() => {
       start += step;
-      if (start >= target) { setCount(target); clearInterval(timer); }
-      else setCount(Math.floor(start));
+      if (start >= target) {
+        setCount(target);
+        clearInterval(timer);
+      } else {
+        setCount(Math.floor(start));
+      }
     }, 16);
     return () => clearInterval(timer);
-  }, [isVisible, target, duration]);
+  }, [target, isVisible, duration]);
   return count;
 };
 
 const useScrolled = () => {
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 60);
+    const handler = () => setScrolled(window.scrollY > 40);
     window.addEventListener('scroll', handler, { passive: true });
     return () => window.removeEventListener('scroll', handler);
   }, []);
@@ -190,16 +214,32 @@ const openWA = (message) => {
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
 };
 
-const FloatingWAButton = () => (
-  <button
-    onClick={() => openWA("Hi! I'm interested in your UPVC interior work. Please get in touch.")}
-    className="fixed bottom-6 right-6 z-50 w-16 h-16 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center shadow-2xl transition-all hover:scale-110 hover:shadow-green-500/40"
-    title="Chat on WhatsApp"
-    aria-label="WhatsApp Chat"
-  >
-    <span className="absolute inset-0 rounded-full bg-green-400 animate-ping opacity-40 pointer-events-none" />
-    <WAIcon className="w-8 h-8 relative z-10" />
-  </button>
+const callDirect = () => {
+  window.location.href = `tel:${PHONE_NUMBER}`;
+};
+
+// Dual Floating Action Dock (Call 9499009409 + WhatsApp)
+const FloatingActionButtons = () => (
+  <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3 pointer-events-auto">
+    <a
+      href={`tel:${PHONE_NUMBER}`}
+      className="flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-slate-950 px-4 py-2.5 rounded-full shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-slate-900"
+      aria-label={`Call ${PHONE_NUMBER}`}
+    >
+      <Phone size={18} className="animate-bounce" />
+      <span className="font-black text-xs sm:text-sm tracking-wide">Call {PHONE_NUMBER}</span>
+    </a>
+
+    <button
+      onClick={() => openWA("Hi Sri Shanmuga Interiors! I am looking for UPVC/PVC interior work. Please provide a free quote.")}
+      className="relative w-14 h-14 sm:w-16 sm:h-16 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center shadow-2xl transition-all hover:scale-110 hover:shadow-green-500/40"
+      title="Chat on WhatsApp"
+      aria-label="WhatsApp Chat"
+    >
+      <span className="absolute inset-0 rounded-full bg-green-400 animate-ping opacity-40 pointer-events-none" />
+      <WAIcon className="w-7 h-7 sm:w-8 sm:h-8 relative z-10" />
+    </button>
+  </div>
 );
 
 const SectionReveal = ({ children, className = "", delay = 0 }) => {
@@ -236,12 +276,149 @@ const StatCard = ({ value, suffix, label }) => {
     return () => observer.disconnect();
   }, []);
   return (
-    <div ref={ref} className="text-center px-4">
-      <div className="text-4xl md:text-5xl font-black text-yellow-400 tabular-nums">
+    <div ref={ref} className="text-center px-4 py-3 bg-slate-900/60 backdrop-blur-md rounded-2xl border border-white/10 shadow-lg">
+      <div className="text-3xl md:text-4xl font-black text-yellow-400 tabular-nums">
         {count}{suffix}
       </div>
-      <div className="text-slate-400 mt-2 text-sm font-medium tracking-wide">{label}</div>
+      <div className="text-slate-200 mt-1 text-xs md:text-sm font-bold tracking-wide">{label}</div>
     </div>
+  );
+};
+
+// --- TOP ANNOUNCEMENT BAR ---
+const TopBar = () => (
+  <div className="bg-yellow-400 text-slate-950 text-xs font-black py-2 px-4 shadow-sm relative z-50">
+    <div className="container mx-auto flex flex-col sm:flex-row items-center justify-between gap-1 text-center sm:text-left">
+      <div className="flex items-center gap-2">
+        <span className="bg-slate-950 text-yellow-400 px-2 py-0.5 rounded text-[10px] uppercase font-black">Direct Call</span>
+        <a href={`tel:${PHONE_NUMBER}`} className="hover:underline flex items-center gap-1 font-black text-sm">
+          <Phone size={14} /> {PHONE_NUMBER}
+        </a>
+        <span className="text-slate-800 hidden md:inline">| Free Doorstep Measurement & Estimate</span>
+      </div>
+      <div className="text-[11px] font-bold text-slate-900 truncate max-w-xl">
+        📍 <strong>Service Areas:</strong> Perambur, Villivakam, Korattur, Kolathur, Anna nagar, Porur, Madhuravayal, Kattupakkam & 15+ more
+      </div>
+    </div>
+  </div>
+);
+
+// --- SERVICE AREAS SECTION (Interactive & Local SEO) ---
+const ServiceAreasSection = ({ isFullPage = false }) => {
+  const [search, setSearch] = useState('');
+
+  const filteredAreas = useMemo(() => {
+    return SERVICE_AREAS.filter(area =>
+      area.name.toLowerCase().includes(search.toLowerCase()) ||
+      area.popular.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [search]);
+
+  return (
+    <section id="service-areas" className={`py-20 text-white relative overflow-hidden ${isFullPage ? 'bg-slate-950 min-h-screen pt-32' : 'bg-gradient-to-b from-slate-900 via-slate-950 to-slate-900'}`}>
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-600 via-yellow-400 to-yellow-600" />
+      <div className="absolute -top-40 -left-40 w-96 h-96 bg-yellow-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-yellow-500/10 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="container mx-auto px-6 relative z-10">
+        <SectionReveal className="text-center max-w-3xl mx-auto mb-12">
+          <span className="inline-flex items-center gap-1.5 bg-yellow-400/15 border border-yellow-400/30 text-yellow-300 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-4">
+            <Navigation size={14} /> 23 Dedicated Service Areas
+          </span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 leading-tight">
+            UPVC & PVC Interiors <span className="text-yellow-400">Near You</span>
+          </h2>
+          <p className="text-slate-300 text-base md:text-lg leading-relaxed">
+            We provide free doorstep measurement, design consultation, and rapid 7–10 days installation in all 23 areas below. Call <a href={`tel:${PHONE_NUMBER}`} className="text-yellow-400 font-bold underline">{PHONE_NUMBER}</a> for an instant site visit.
+          </p>
+        </SectionReveal>
+
+        {/* Search Bar */}
+        <div className="max-w-2xl mx-auto mb-10">
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+            <input
+              type="text"
+              placeholder="Search your location (e.g. Perambur, Villivakam, Anna nagar, Porur, Kolathur...)"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-12 pr-4 py-3.5 bg-slate-800/90 border border-slate-700 rounded-2xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm font-medium transition-all shadow-inner"
+            />
+          </div>
+        </div>
+
+        {/* 23 Service Area Cards */}
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-12">
+          {filteredAreas.map((area, idx) => (
+            <SectionReveal key={area.name} delay={(idx % 6) * 40}
+              className="group p-5 bg-slate-800/60 hover:bg-slate-800 rounded-2xl border border-slate-700/80 hover:border-yellow-400 transition-all duration-300 flex flex-col justify-between shadow-lg hover:-translate-y-1"
+            >
+              <div>
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <h3 className="font-black text-lg text-white group-hover:text-yellow-400 transition-colors flex items-center gap-1.5">
+                    <MapPin size={16} className="text-yellow-400 shrink-0" />
+                    {area.name}
+                  </h3>
+                  <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-green-500/10 text-green-300 border border-green-500/20 shrink-0">
+                    Free Visit
+                  </span>
+                </div>
+                <p className="text-xs text-slate-400 mb-1 flex items-center gap-1">
+                  <Clock size={12} className="text-yellow-400" /> Response: <span className="text-slate-200 font-semibold">{area.speed}</span>
+                </p>
+                <p className="text-xs text-slate-300 mb-4 font-medium line-clamp-1">
+                  ★ Popular: {area.popular}
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-700/60">
+                <button
+                  onClick={() => openWA(`Hi Sri Shanmuga Interiors, I need UPVC interior work in ${area.name}. Please arrange a free site visit.`)}
+                  className="bg-green-600 hover:bg-green-500 text-white text-xs font-bold py-2 px-2 rounded-xl flex items-center justify-center gap-1 transition-colors"
+                >
+                  <WAIcon className="w-3.5 h-3.5" /> Quote
+                </button>
+                <a
+                  href={`tel:${PHONE_NUMBER}`}
+                  className="bg-yellow-400 hover:bg-yellow-300 text-slate-950 text-xs font-black py-2 px-2 rounded-xl flex items-center justify-center gap-1 transition-colors"
+                >
+                  <Phone size={13} /> Call
+                </a>
+              </div>
+            </SectionReveal>
+          ))}
+        </div>
+
+        {filteredAreas.length === 0 && (
+          <div className="text-center py-10 bg-slate-800/40 rounded-2xl border border-slate-700 mb-10">
+            <p className="text-slate-300 text-sm mb-3">No matching location found in the filter.</p>
+            <p className="text-white font-bold mb-4">We cover all 23 primary service areas across Chennai!</p>
+            <a
+              href={`tel:${PHONE_NUMBER}`}
+              className="inline-flex items-center gap-2 bg-yellow-400 text-slate-950 font-black px-6 py-2.5 rounded-full text-sm hover:bg-yellow-300 transition-all"
+            >
+              <Phone size={16} /> Call {PHONE_NUMBER} Directly
+            </a>
+          </div>
+        )}
+
+        {/* SEO Bottom Card */}
+        <div className="bg-slate-900/90 border border-yellow-400/30 rounded-2xl p-6 text-center max-w-4xl mx-auto backdrop-blur-sm">
+          <h4 className="text-sm font-black text-yellow-400 uppercase tracking-wider mb-2">
+            Chennai's Best UPVC & PVC Interior Specialists Near You
+          </h4>
+          <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mb-4">
+            Looking for a <strong>waterproof UPVC modular kitchen</strong> in Perambur, Villivakam, or Korattur? Need <strong>custom bedroom cupboards or sliding windows</strong> in Anna nagar, Porur, or Kolathur? Call <strong>{PHONE_NUMBER}</strong> for doorstep design consultation, laser measurements, and direct workshop prices.
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-bold text-slate-300">
+            <span className="flex items-center gap-1 text-yellow-400"><CheckCircle size={14} /> 10-Year Written Warranty</span>
+            <span className="flex items-center gap-1 text-yellow-400"><CheckCircle size={14} /> 100% Water & Termite Proof</span>
+            <span className="flex items-center gap-1 text-yellow-400"><CheckCircle size={14} /> 7–10 Days Installation</span>
+            <span className="flex items-center gap-1 text-yellow-400"><Phone size={14} /> Call: {PHONE_NUMBER}</span>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 };
 
@@ -250,13 +427,17 @@ const Navbar = ({ setPage, currentPage }) => {
   const [isOpen, setIsOpen] = useState(false);
   const scrolled = useScrolled();
 
-  const handleNav = (page) => { setPage(page); setIsOpen(false); window.scrollTo(0, 0); };
+  const handleNav = (page) => {
+    setIsOpen(false);
+    setPage(page);
+    window.scrollTo(0, 0);
+  };
 
   const NavItem = ({ page, label }) => (
     <button
       onClick={() => handleNav(page)}
       className={`relative font-semibold text-sm transition-colors pb-1 ${
-        currentPage === page ? 'text-yellow-400' : scrolled ? 'text-slate-700 hover:text-yellow-600' : 'text-white/90 hover:text-yellow-300'
+        currentPage === page ? 'text-yellow-400' : scrolled ? 'text-slate-800 hover:text-yellow-600' : 'text-white/90 hover:text-yellow-300'
       }`}
     >
       {label}
@@ -267,50 +448,82 @@ const Navbar = ({ setPage, currentPage }) => {
   );
 
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-300 ${
-      scrolled ? 'bg-white/96 backdrop-blur-md shadow-lg py-3' : 'bg-transparent py-5'
+    <nav className={`fixed w-full z-40 transition-all duration-300 ${
+      scrolled ? 'bg-white/96 backdrop-blur-md shadow-lg py-2.5 top-0' : 'bg-slate-900/90 sm:bg-transparent py-4 top-0 sm:top-8'
     }`}>
       <div className="container mx-auto px-6 flex justify-between items-center">
         {/* Logo */}
         <div onClick={() => handleNav('home')} className="flex items-center gap-3 cursor-pointer">
-          <img src="/logo.png" alt={BRAND_NAME} className="h-12 w-12 object-contain drop-shadow-md" />
-          <span className={`text-lg font-black hidden sm:inline transition-colors ${scrolled ? 'text-slate-900' : 'text-white drop-shadow'}`}>
-            {BRAND_NAME}
-          </span>
+          <img src="/logo.png" alt={BRAND_NAME} className="h-11 w-11 object-contain drop-shadow-md bg-white rounded-full p-0.5 border border-yellow-400" />
+          <div className="flex flex-col">
+            <span className={`text-base sm:text-lg font-black transition-colors leading-tight ${scrolled ? 'text-slate-900' : 'text-white drop-shadow'}`}>
+              {BRAND_NAME}
+            </span>
+            <span className="text-[10px] font-bold text-yellow-500 tracking-wider uppercase">UPVC & PVC Interiors</span>
+          </div>
         </div>
 
         {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden lg:flex items-center gap-7">
           <NavItem page="home" label="Home" />
           <NavItem page="services" label="Services" />
+          <NavItem page="areas" label="Service Areas (23)" />
           <NavItem page="gallery" label="Portfolio" />
           <NavItem page="contact" label="Contact" />
+          
+          {/* Direct Phone Call Button */}
+          <a
+            href={`tel:${PHONE_NUMBER}`}
+            className="flex items-center gap-1.5 border-2 border-yellow-400 bg-yellow-400 hover:bg-yellow-300 text-slate-950 px-4 py-2 rounded-full font-black text-xs transition-all shadow-md hover:scale-105"
+            title={`Call ${PHONE_NUMBER}`}
+          >
+            <Phone size={14} className="animate-pulse" />
+            <span>{PHONE_NUMBER}</span>
+          </a>
+
           <button
-            onClick={() => openWA('Hi, I want a free quote for interior work.')}
-            className="bg-yellow-400 hover:bg-yellow-300 text-slate-900 px-5 py-2.5 rounded-full font-bold text-sm transition-all shadow-md hover:shadow-yellow-400/40 hover:scale-105 flex items-center gap-2"
+            onClick={() => openWA('Hi, I want a free quote for UPVC interior work.')}
+            className="bg-green-600 hover:bg-green-500 text-white px-5 py-2.5 rounded-full font-bold text-sm transition-all shadow-md hover:scale-105 flex items-center gap-2"
           >
             <WAIcon className="w-4 h-4" /> Free Quote
           </button>
         </div>
 
-        {/* Mobile toggle */}
-        <button onClick={() => setIsOpen(!isOpen)} className={`md:hidden transition-colors ${scrolled ? 'text-slate-900' : 'text-white'}`}>
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        {/* Mobile quick call & toggle */}
+        <div className="flex items-center gap-2 lg:hidden">
+          <a
+            href={`tel:${PHONE_NUMBER}`}
+            className="flex items-center gap-1 bg-yellow-400 text-slate-950 px-3 py-1.5 rounded-full font-black text-xs shadow-md"
+            aria-label="Call Sri Shanmuga Interiors"
+          >
+            <Phone size={14} /> {PHONE_NUMBER}
+          </a>
+          <button onClick={() => setIsOpen(!isOpen)} className={`p-1.5 transition-colors ${scrolled ? 'text-slate-900' : 'text-white'}`}>
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile menu */}
       {isOpen && (
-        <div className="md:hidden bg-white border-t border-slate-100 shadow-xl">
-          <div className="flex flex-col p-6 gap-5">
-            {[['home', 'Home'], ['services', 'Services'], ['gallery', 'Portfolio'], ['contact', 'Contact']].map(([p, l]) => (
-              <button key={p} onClick={() => handleNav(p)} className={`text-left font-semibold text-base ${currentPage === p ? 'text-yellow-500' : 'text-slate-700'}`}>{l}</button>
+        <div className="lg:hidden bg-white border-t border-slate-100 shadow-2xl">
+          <div className="flex flex-col p-6 gap-4">
+            {[['home', 'Home'], ['services', 'Services'], ['areas', 'Service Areas (23 Locations)'], ['gallery', 'Portfolio'], ['contact', 'Contact Us']].map(([p, l]) => (
+              <button key={p} onClick={() => handleNav(p)} className={`text-left font-bold text-base ${currentPage === p ? 'text-yellow-600' : 'text-slate-700'}`}>{l}</button>
             ))}
+            
+            <a
+              href={`tel:${PHONE_NUMBER}`}
+              className="bg-yellow-400 text-slate-950 font-black py-3 rounded-xl flex items-center justify-center gap-2 text-sm shadow-md"
+            >
+              <Phone size={16} /> Call Directly: {PHONE_NUMBER}
+            </a>
+
             <button
               onClick={() => { openWA('Hi, I want a free quote for interior work.'); setIsOpen(false); }}
-              className="bg-yellow-400 text-slate-900 font-bold py-3 rounded-xl flex items-center justify-center gap-2"
+              className="bg-green-600 text-white font-black py-3 rounded-xl flex items-center justify-center gap-2 text-sm shadow-md"
             >
-              <WAIcon className="w-5 h-5" /> Get Free Quote
+              <WAIcon className="w-5 h-5" /> WhatsApp Free Quote
             </button>
           </div>
         </div>
@@ -331,41 +544,26 @@ const Lightbox = ({ images, startIndex, onClose }) => {
       if (e.key === 'ArrowLeft') prev();
       if (e.key === 'ArrowRight') next();
     };
-    document.body.style.overflow = 'hidden';
     window.addEventListener('keydown', handler);
-    return () => { window.removeEventListener('keydown', handler); document.body.style.overflow = ''; };
-  }, [onClose, prev, next]);
+    return () => window.removeEventListener('keydown', handler);
+  }, [prev, next, onClose]);
 
   return (
-    <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4 animate-fade-in" onClick={onClose}>
-      <button onClick={onClose} className="absolute top-5 right-5 text-white/70 hover:text-yellow-400 transition-colors z-10 bg-white/10 p-2 rounded-full">
-        <X size={24} />
+    <div className="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-4">
+      <button onClick={onClose} className="absolute top-5 right-5 text-white/70 hover:text-white p-2 rounded-full bg-slate-800/50 hover:bg-slate-800 transition-colors">
+        <X size={28} />
       </button>
-
-      <button
-        onClick={(e) => { e.stopPropagation(); prev(); }}
-        className="absolute left-4 md:left-8 text-white/80 hover:text-yellow-400 p-3 bg-white/10 hover:bg-white/20 rounded-full transition-all z-10"
-      >
+      <button onClick={prev} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white p-3 rounded-full bg-slate-800/50 hover:bg-slate-800 transition-colors">
         <ChevronLeft size={28} />
       </button>
-
-      <div className="max-w-5xl w-full max-h-[85vh] flex flex-col items-center gap-4" onClick={e => e.stopPropagation()}>
-        <img
-          src={images[current].url}
-          alt={images[current].title}
-          className="max-h-[72vh] max-w-full object-contain rounded-2xl shadow-2xl"
-        />
-        <div className="text-center">
-          <p className="text-white font-bold text-lg">{images[current].title}</p>
-          <p className="text-yellow-400 text-sm mt-0.5">{images[current].category}</p>
-          <p className="text-slate-500 text-xs mt-1">{current + 1} / {images.length}</p>
+      <div className="max-w-4xl max-h-[85vh] flex flex-col items-center">
+        <img src={images[current].url} alt={images[current].title} className="max-w-full max-h-[75vh] object-contain rounded-2xl shadow-2xl" />
+        <div className="mt-4 text-center">
+          <p className="text-white font-black text-lg">{images[current].title}</p>
+          <span className="text-yellow-400 text-xs font-semibold uppercase">{images[current].category}</span>
         </div>
       </div>
-
-      <button
-        onClick={(e) => { e.stopPropagation(); next(); }}
-        className="absolute right-4 md:right-8 text-white/80 hover:text-yellow-400 p-3 bg-white/10 hover:bg-white/20 rounded-full transition-all z-10"
-      >
+      <button onClick={next} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white p-3 rounded-full bg-slate-800/50 hover:bg-slate-800 transition-colors">
         <ChevronRight size={28} />
       </button>
     </div>
@@ -374,27 +572,24 @@ const Lightbox = ({ images, startIndex, onClose }) => {
 
 // --- FAQ ACCORDION ---
 const FAQAccordion = () => {
-  const [openIdx, setOpenIdx] = useState(null);
+  const [openIdx, setOpenIdx] = useState(0);
+
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       {FAQ_DATA.map((item, idx) => (
-        <div key={idx} className={`rounded-2xl overflow-hidden border transition-all ${openIdx === idx ? 'border-yellow-300 shadow-md' : 'border-slate-200'}`}>
+        <div key={idx} className="border border-slate-200 bg-white rounded-2xl overflow-hidden shadow-sm transition-shadow hover:shadow-md">
           <button
             onClick={() => setOpenIdx(openIdx === idx ? null : idx)}
-            className="w-full flex justify-between items-center p-5 text-left bg-white hover:bg-yellow-50 transition-colors"
+            className="w-full text-left p-5 flex items-center justify-between font-bold text-slate-900 gap-4"
           >
-            <span className="font-bold text-slate-800 pr-4 text-sm md:text-base">{item.q}</span>
-            <span className="shrink-0">
-              {openIdx === idx
-                ? <ChevronUp size={20} className="text-yellow-500" />
-                : <ChevronDown size={20} className="text-slate-400" />}
-            </span>
+            <span className="text-base">{item.q}</span>
+            {openIdx === idx ? <ChevronUp className="text-yellow-600 shrink-0" size={20} /> : <ChevronDown className="text-slate-400 shrink-0" size={20} />}
           </button>
-          <div className={`overflow-hidden transition-all duration-300 ${openIdx === idx ? 'max-h-96' : 'max-h-0'}`}>
-            <div className="px-5 pb-5 pt-1 bg-yellow-50 text-slate-600 text-sm leading-relaxed">
+          {openIdx === idx && (
+            <div className="px-5 pb-5 text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
               {item.a}
             </div>
-          </div>
+          )}
         </div>
       ))}
     </div>
@@ -413,65 +608,75 @@ const HomePage = ({ setPage, setSelectedService }) => {
   return (
     <>
       {/* ── 1. HERO ── */}
-      <div className="relative h-screen w-full overflow-hidden">
+      <div className="relative min-h-screen w-full overflow-hidden flex flex-col justify-between pt-24 sm:pt-28">
         {HERO_IMAGES.map((img, idx) => (
           <div key={idx} className={`absolute inset-0 transition-opacity duration-1000 ${idx === currentSlide ? 'opacity-100' : 'opacity-0'}`}>
             <img src={img} alt="" className="w-full h-full object-cover" />
           </div>
         ))}
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/75 via-slate-900/50 to-slate-900/85" />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/60 to-slate-950/90" />
 
-        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
+        <div className="relative z-10 my-auto flex flex-col items-center justify-center text-center px-6 py-10">
           <div className="animate-fade-in-up max-w-4xl">
-            <span className="inline-block bg-yellow-400/15 text-yellow-300 border border-yellow-400/30 px-5 py-1.5 rounded-full text-sm font-bold mb-6 backdrop-blur-sm">
-              ✦ UPVC Specialists – Ambattur & Thiruvallur
+            <span className="inline-block bg-yellow-400/20 text-yellow-300 border border-yellow-400/40 px-5 py-1.5 rounded-full text-xs sm:text-sm font-bold mb-5 backdrop-blur-sm shadow-md">
+              ✦ Top UPVC & PVC Interiors Near You • Call: {PHONE_NUMBER}
             </span>
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-black text-white mb-5 leading-tight tracking-tight drop-shadow-lg">
+            <h1 className="text-4xl sm:text-6xl md:text-7xl font-black text-white mb-5 leading-tight tracking-tight drop-shadow-lg">
               Modern Interiors.<br />
               <span className="text-yellow-400">Zero Maintenance.</span>
             </h1>
-            <p className="text-white/75 text-lg md:text-xl mb-10 max-w-2xl mx-auto leading-relaxed">
-              Expert craftsmanship in Model Kitchens, UPVC Windows, Pooja Mandirs & more.
+            <p className="text-white/85 text-base sm:text-lg md:text-xl mb-7 max-w-2xl mx-auto leading-relaxed">
+              Chennai's premier UPVC craftsmen for Model Kitchens, Cupboards, Sliding Windows & Mandirs.
               <br className="hidden md:block" />
-              Waterproof • Termite-proof • Built to last 10+ years.
+              100% Waterproof • Termite-Proof • 10-Year Warranty.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button
-                onClick={() => openWA('Hi, I want a free consultation for my home interiors.')}
-                className="bg-yellow-400 hover:bg-yellow-300 text-slate-900 px-9 py-4 rounded-full font-black text-lg shadow-2xl transition-all hover:shadow-yellow-400/30 hover:scale-105"
+
+            {/* Quick Service Areas Ticker Pill */}
+            <div className="mb-8 p-3 bg-slate-900/80 border border-yellow-400/30 rounded-2xl max-w-3xl mx-auto text-xs text-slate-300">
+              <span className="text-yellow-400 font-bold uppercase mr-1">📍 Service Areas:</span>
+              <span>Perambur, Villivakam, Korattur, Kolathur, Annanur, Aiyapakkam, Velappanjavadi, Pudhur, Red hills, Aiynavaram, Purasaivakkam, Anna nagar, Kaaduvetti, Karayanjavadi, Oragadam, Kallikuppam, Thirumulavayil, Argimedu, Paruthipattu, Kannapalayam, Porur, Madhuravayal, Kattupakkam.</span>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3.5 justify-center items-center mb-8">
+              <a
+                href={`tel:${PHONE_NUMBER}`}
+                className="w-full sm:w-auto bg-yellow-400 hover:bg-yellow-300 text-slate-950 px-8 py-4 rounded-full font-black text-base shadow-2xl transition-all hover:scale-105 flex items-center justify-center gap-2"
               >
-                Get Free Consultation
+                <Phone size={18} /> Call {PHONE_NUMBER}
+              </a>
+              <button
+                onClick={() => openWA('Hi, I want a free quote for home interior work.')}
+                className="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-full font-black text-base shadow-2xl transition-all hover:scale-105 flex items-center justify-center gap-2"
+              >
+                <WAIcon className="w-5 h-5" /> WhatsApp Quote
               </button>
               <button
-                onClick={() => setPage('gallery')}
-                className="border-2 border-white/40 hover:border-yellow-400 text-white hover:text-yellow-400 px-9 py-4 rounded-full font-bold text-lg backdrop-blur-sm transition-all hover:bg-white/5"
+                onClick={() => setPage('areas')}
+                className="w-full sm:w-auto border-2 border-white/40 hover:border-yellow-400 text-white hover:text-yellow-400 px-7 py-3.5 rounded-full font-bold text-base backdrop-blur-sm transition-all hover:bg-white/5"
               >
-                View Our Work
+                View 23 Service Areas
               </button>
             </div>
           </div>
+        </div>
 
-          {/* Slide indicator dots */}
-          <div className="absolute bottom-10 flex gap-2.5 items-center">
-            {HERO_IMAGES.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setCurrentSlide(idx)}
-                className={`rounded-full transition-all duration-300 ${idx === currentSlide ? 'w-8 h-2.5 bg-yellow-400' : 'w-2.5 h-2.5 bg-white/40 hover:bg-white/70'}`}
-              />
-            ))}
+        {/* Floating Quick Stat Bar */}
+        <div className="relative z-10 container mx-auto px-6 pb-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <StatCard value={10} suffix=" Years" label="Written Warranty" />
+            <StatCard value={500} suffix="+" label="Finished Projects" />
+            <StatCard value={23} suffix=" Areas" label="Service Locations" />
+            <StatCard value={100} suffix="%" label="Water & Termite Proof" />
           </div>
         </div>
       </div>
 
-
-
-      {/* ── 3. WHY CHOOSE US ── */}
+      {/* ── 2. WHY CHOOSE US ── */}
       <section className="py-24 bg-white">
         <div className="container mx-auto px-6">
           <SectionReveal className="text-center mb-16">
             <span className="text-yellow-600 font-bold tracking-widest text-xs uppercase">Why Choose Us</span>
-            <h2 className="text-4xl font-black text-slate-900 mt-3 mb-4">
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 mt-3 mb-4">
               The Smart Choice for <span className="text-yellow-500">Modern Homes</span>
             </h2>
             <p className="text-slate-500 max-w-xl mx-auto">UPVC interiors that look stunning, last decades, and cost less than traditional wood.</p>
@@ -497,13 +702,13 @@ const HomePage = ({ setPage, setSelectedService }) => {
         </div>
       </section>
 
-      {/* ── 4. SERVICES PREVIEW ── */}
+      {/* ── 3. SERVICES PREVIEW ── */}
       <section className="py-24 bg-slate-50">
         <div className="container mx-auto px-6">
           <SectionReveal className="text-center mb-16">
             <span className="text-yellow-600 font-bold tracking-widest text-xs uppercase">What We Do</span>
-            <h2 className="text-4xl font-black text-slate-900 mt-3 mb-4">Our Services</h2>
-            <p className="text-slate-500 max-w-xl mx-auto">Specialized in UPVC works for homes and offices across Thiruvallur District.</p>
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 mt-3 mb-4">Our Services</h2>
+            <p className="text-slate-500 max-w-xl mx-auto">Specialized in UPVC works for homes and offices across Chennai.</p>
           </SectionReveal>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
@@ -519,12 +724,20 @@ const HomePage = ({ setPage, setSelectedService }) => {
                 <div className="p-6">
                   <h3 className="text-lg font-black text-slate-900 mb-1.5">{service.title}</h3>
                   <p className="text-slate-500 text-sm mb-5 line-clamp-2">{service.shortDesc}</p>
-                  <button
-                    onClick={() => { setSelectedService(service); setPage('service-detail'); }}
-                    className="text-yellow-600 font-bold text-sm flex items-center gap-1.5 hover:gap-3 transition-all group/btn"
-                  >
-                    View Details <ArrowRight size={15} className="transition-transform group-hover/btn:translate-x-1" />
-                  </button>
+                  <div className="flex items-center justify-between">
+                    <button
+                      onClick={() => { setSelectedService(service); setPage('service-detail'); }}
+                      className="text-yellow-600 font-bold text-sm flex items-center gap-1.5 hover:gap-3 transition-all group/btn"
+                    >
+                      View Details <ArrowRight size={15} className="transition-transform group-hover/btn:translate-x-1" />
+                    </button>
+                    <a
+                      href={`tel:${PHONE_NUMBER}`}
+                      className="text-xs font-bold text-slate-700 hover:text-slate-950 flex items-center gap-1"
+                    >
+                      <Phone size={12} /> Call
+                    </a>
+                  </div>
                 </div>
               </SectionReveal>
             ))}
@@ -541,14 +754,17 @@ const HomePage = ({ setPage, setSelectedService }) => {
         </div>
       </section>
 
+      {/* ── 4. SERVICE AREAS SECTION (All 23 Locations) ── */}
+      <ServiceAreasSection isFullPage={false} />
+
       {/* ── 5. PORTFOLIO MARQUEE ── */}
       <section className="py-24 bg-white overflow-hidden">
         <div className="container mx-auto px-6 mb-12">
           <SectionReveal className="flex flex-col md:flex-row justify-between items-end gap-4">
             <div>
               <span className="text-yellow-600 font-bold tracking-widest text-xs uppercase">Our Work</span>
-              <h2 className="text-4xl font-black text-slate-900 mt-3">Recent Projects</h2>
-              <p className="text-slate-500 mt-2">A glimpse of finished sites across Thiruvallur District.</p>
+              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 mt-3">Recent Projects</h2>
+              <p className="text-slate-500 mt-2">A glimpse of finished sites across our Chennai service areas.</p>
             </div>
             <button onClick={() => setPage('gallery')} className="text-yellow-600 font-bold flex items-center gap-2 hover:gap-3 transition-all shrink-0 group">
               Full Portfolio <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
@@ -578,24 +794,30 @@ const HomePage = ({ setPage, setSelectedService }) => {
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-600 via-yellow-400 to-yellow-600" />
         <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-yellow-400/5 blur-3xl pointer-events-none" />
         <SectionReveal className="relative z-10 text-center px-6">
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-5 leading-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-5 leading-tight">
             Ready to Transform <span className="text-yellow-400">Your Home?</span>
           </h2>
-          <p className="text-slate-400 text-lg mb-10 max-w-xl mx-auto leading-relaxed">
-            Get a free site visit & detailed estimate. No obligations — just honest advice from our expert team.
+          <p className="text-slate-400 text-base sm:text-lg mb-10 max-w-xl mx-auto leading-relaxed">
+            Get a free site visit & detailed estimate in your area today. Call our team directly at <a href={`tel:${PHONE_NUMBER}`} className="text-yellow-400 font-bold underline">{PHONE_NUMBER}</a>.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href={`tel:${PHONE_NUMBER}`}
+              className="bg-yellow-400 hover:bg-yellow-300 text-slate-900 px-9 py-4 rounded-full font-black text-lg shadow-2xl transition-all hover:scale-105 flex items-center justify-center gap-2"
+            >
+              <Phone size={20} /> Call {PHONE_NUMBER}
+            </a>
             <button
               onClick={() => openWA('Hi, I would like to book a free site visit and get an estimate for interior work.')}
-              className="bg-yellow-400 hover:bg-yellow-300 text-slate-900 px-10 py-4 rounded-full font-black text-lg shadow-2xl transition-all hover:scale-105 hover:shadow-yellow-400/30 flex items-center justify-center gap-2"
+              className="bg-green-600 hover:bg-green-500 text-white px-9 py-4 rounded-full font-black text-lg shadow-2xl transition-all hover:scale-105 flex items-center justify-center gap-2"
             >
-              <WAIcon className="w-5 h-5" /> Book Free Site Visit
+              <WAIcon className="w-5 h-5" /> WhatsApp Us
             </button>
             <button
               onClick={() => setPage('contact')}
-              className="border-2 border-white/20 hover:border-yellow-400 text-white/80 hover:text-yellow-400 px-10 py-4 rounded-full font-bold text-lg transition-all"
+              className="border-2 border-white/20 hover:border-yellow-400 text-white/80 hover:text-yellow-400 px-9 py-4 rounded-full font-bold text-lg transition-all"
             >
-              Contact Us
+              Contact Page
             </button>
           </div>
         </SectionReveal>
@@ -611,17 +833,16 @@ const ServicesPage = ({ setSelectedService, setPage }) => {
   const filteredServices = selectedCategory === 'All' ? SERVICES_DATA : SERVICES_DATA.filter(s => s.category === selectedCategory);
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Banner */}
+    <div className="min-h-screen bg-slate-50 pt-20">
       <div className="bg-slate-900 pt-28 pb-16 text-center relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-600 via-yellow-400 to-yellow-600" />
-        <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full bg-yellow-400/5 blur-3xl pointer-events-none" />
-        <h1 className="text-5xl font-black text-white mb-3 relative">Our Services</h1>
-        <p className="text-slate-400 max-w-xl mx-auto text-lg relative">Expert UPVC works for homes and offices in Thiruvallur District.</p>
+        <h1 className="text-4xl sm:text-5xl font-black text-white mb-3 relative">Our Services</h1>
+        <p className="text-slate-400 max-w-xl mx-auto text-base sm:text-lg relative px-4">
+          Expert UPVC & PVC works across Chennai. Call <a href={`tel:${PHONE_NUMBER}`} className="text-yellow-400 underline font-bold">{PHONE_NUMBER}</a> for a free site visit.
+        </p>
       </div>
 
       <div className="container mx-auto px-6 py-14">
-        {/* Filter Pills */}
         <div className="flex flex-wrap justify-center gap-3 mb-14">
           {categories.map(cat => (
             <button
@@ -651,12 +872,21 @@ const ServicesPage = ({ setSelectedService, setPage }) => {
               <div className="p-6 flex flex-col flex-1">
                 <h3 className="text-xl font-black text-slate-900 mb-2">{service.title}</h3>
                 <p className="text-slate-500 text-sm mb-6 flex-1 leading-relaxed">{service.shortDesc}</p>
-                <button
-                  onClick={() => { setSelectedService(service); setPage('service-detail'); }}
-                  className="w-full bg-yellow-50 text-yellow-800 border border-yellow-200 py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-yellow-400 hover:text-slate-900 hover:border-yellow-400 transition-all"
-                >
-                  View Details <ArrowRight size={16} />
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => { setSelectedService(service); setPage('service-detail'); }}
+                    className="flex-1 bg-yellow-50 text-yellow-800 border border-yellow-200 py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-yellow-400 hover:text-slate-900 hover:border-yellow-400 transition-all text-sm"
+                  >
+                    Details <ArrowRight size={15} />
+                  </button>
+                  <a
+                    href={`tel:${PHONE_NUMBER}`}
+                    className="bg-slate-900 hover:bg-slate-800 text-yellow-400 px-4 py-3 rounded-xl font-bold flex items-center justify-center gap-1 transition-all text-sm"
+                    title={`Call ${PHONE_NUMBER}`}
+                  >
+                    <Phone size={15} />
+                  </a>
+                </div>
               </div>
             </SectionReveal>
           ))}
@@ -672,18 +902,15 @@ const ServiceDetailPage = ({ service, setPage, setSelectedService }) => {
   const [activeImage, setActiveImage] = useState(service.image);
   useEffect(() => { setActiveImage(service.image); }, [service]);
   const imagesList = service.images?.length > 0 ? service.images : [service.image];
-  const related = SERVICES_DATA.filter(s => s.id !== service.id && s.category === service.category).slice(0, 3);
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Banner */}
+    <div className="min-h-screen bg-white pt-20">
       <div className="bg-slate-900 pt-28 pb-12 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-600 via-yellow-400 to-yellow-600" />
         <div className="container mx-auto px-6">
           <button onClick={() => setPage('services')} className="flex items-center gap-2 text-slate-400 hover:text-yellow-400 transition-colors font-semibold mb-4 text-sm group">
             <ChevronLeft size={18} className="group-hover:-translate-x-1 transition-transform" /> All Services
           </button>
-          {/* Breadcrumb */}
           <div className="flex items-center gap-2 text-sm text-slate-500">
             <button onClick={() => setPage('home')} className="hover:text-yellow-400 transition-colors">Home</button>
             <span>/</span>
@@ -696,7 +923,6 @@ const ServiceDetailPage = ({ service, setPage, setSelectedService }) => {
 
       <div className="container mx-auto px-6 py-14">
         <div className="grid md:grid-cols-2 gap-14 items-start mb-20">
-          {/* Images */}
           <div>
             <div className="rounded-2xl overflow-hidden shadow-2xl aspect-[4/3] border border-slate-100 bg-slate-100">
               <img src={activeImage} alt={service.title} className="w-full h-full object-cover transition-all duration-500" />
@@ -714,11 +940,10 @@ const ServiceDetailPage = ({ service, setPage, setSelectedService }) => {
             )}
           </div>
 
-          {/* Details */}
           <div>
             <span className="text-yellow-600 font-black tracking-widest text-xs uppercase mb-3 block">{service.category} Series</span>
-            <h1 className="text-4xl font-black text-slate-900 mb-5">{service.title}</h1>
-            <p className="text-slate-600 text-lg leading-relaxed mb-8">{service.description}</p>
+            <h1 className="text-3xl sm:text-4xl font-black text-slate-900 mb-5">{service.title}</h1>
+            <p className="text-slate-600 text-base sm:text-lg leading-relaxed mb-8">{service.description}</p>
 
             <h3 className="font-black text-lg text-slate-800 mb-4 flex items-center gap-2">
               <CheckCircle className="text-green-500" size={20} /> Key Features
@@ -732,41 +957,29 @@ const ServiceDetailPage = ({ service, setPage, setSelectedService }) => {
               ))}
             </div>
 
-            <div className="bg-gradient-to-br from-yellow-50 to-amber-50 p-6 rounded-2xl border border-yellow-200">
-              <p className="font-black text-slate-900 mb-1 text-lg">Interested in this?</p>
-              <p className="text-slate-500 text-sm mb-4">WhatsApp us to get a detailed price estimate and free site visit.</p>
-              <button
-                onClick={() => openWA(`Hi, I am interested in ${service.title}. Please provide an estimate.`)}
-                className="w-full bg-yellow-400 hover:bg-yellow-300 text-slate-900 py-3.5 rounded-xl font-black shadow-lg transition-all hover:scale-[1.02] flex items-center justify-center gap-2 text-base"
-              >
-                <WAIcon className="w-5 h-5" /> Get Price Estimate
-              </button>
+            <div className="bg-gradient-to-br from-yellow-50 to-amber-50 p-6 rounded-2xl border border-yellow-200 space-y-4">
+              <div>
+                <p className="font-black text-slate-900 text-lg">Interested in this design?</p>
+                <p className="text-slate-500 text-sm">Call us or WhatsApp to schedule a free measurement visit at your doorstep.</p>
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-3">
+                <a
+                  href={`tel:${PHONE_NUMBER}`}
+                  className="bg-slate-900 hover:bg-slate-800 text-yellow-400 py-3.5 rounded-xl font-black shadow-lg transition-all flex items-center justify-center gap-2 text-sm"
+                >
+                  <Phone size={16} /> Call {PHONE_NUMBER}
+                </a>
+                <button
+                  onClick={() => openWA(`Hi Sri Shanmuga Interiors, I am interested in ${service.title}. Please provide an estimate.`)}
+                  className="bg-yellow-400 hover:bg-yellow-300 text-slate-900 py-3.5 rounded-xl font-black shadow-lg transition-all flex items-center justify-center gap-2 text-sm"
+                >
+                  <WAIcon className="w-5 h-5" /> WhatsApp Quote
+                </button>
+              </div>
             </div>
           </div>
         </div>
-
-        {/* Related Services */}
-        {related.length > 0 && (
-          <div className="border-t border-slate-100 pt-14">
-            <h2 className="text-2xl font-black text-slate-900 mb-8">Related Services</h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              {related.map(rel => (
-                <div key={rel.id}
-                  onClick={() => { setSelectedService(rel); window.scrollTo(0, 0); }}
-                  className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer group border border-slate-100 hover:-translate-y-1"
-                >
-                  <div className="h-48 overflow-hidden">
-                    <img src={rel.image} alt={rel.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                  </div>
-                  <div className="p-5">
-                    <h3 className="font-black text-slate-800 mb-1">{rel.title}</h3>
-                    <p className="text-slate-500 text-sm">{rel.shortDesc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
@@ -779,27 +992,25 @@ const GalleryPage = () => {
   const filteredItems = filter === 'All' ? GALLERY_IMAGES : GALLERY_IMAGES.filter(item => item.category === filter);
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {lightbox && <Lightbox images={lightbox.images} startIndex={lightbox.index} onClose={() => setLightbox(null)} />}
-
-      {/* Banner */}
+    <div className="min-h-screen bg-slate-50 pt-20">
       <div className="bg-slate-900 pt-28 pb-16 text-center relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-600 via-yellow-400 to-yellow-600" />
-        <h1 className="text-5xl font-black text-white mb-3 relative">Our Portfolio</h1>
-        <p className="text-slate-400 max-w-xl mx-auto text-lg relative">Real projects. Real clients. Click any photo to view full-screen.</p>
+        <h1 className="text-4xl sm:text-5xl font-black text-white mb-3 relative">Our Portfolio</h1>
+        <p className="text-slate-400 max-w-xl mx-auto text-base sm:text-lg relative px-4">
+          Real photos of finished UPVC kitchens, wardrobes, sliding windows & pooja mandirs across Chennai.
+        </p>
       </div>
 
       <div className="container mx-auto px-6 py-14">
-        {/* Filter tabs */}
         <div className="flex flex-wrap justify-center gap-2.5 mb-12">
           {GALLERY_CATEGORIES.map(cat => (
             <button
               key={cat}
               onClick={() => setFilter(cat)}
-              className={`px-5 py-2.5 rounded-full font-bold text-xs md:text-sm transition-all whitespace-nowrap ${
+              className={`px-5 py-2 rounded-full text-xs font-bold transition-all ${
                 filter === cat
-                  ? 'bg-yellow-400 text-slate-900 shadow-lg shadow-yellow-400/30 scale-105'
-                  : 'bg-white text-slate-600 hover:bg-yellow-50 border border-slate-200 shadow-sm'
+                  ? 'bg-yellow-400 text-slate-900 shadow-md scale-105'
+                  : 'bg-white text-slate-700 hover:bg-yellow-50 border border-slate-200'
               }`}
             >
               {cat}
@@ -807,62 +1018,63 @@ const GalleryPage = () => {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredItems.map((item, idx) => (
-            <SectionReveal
-              key={`${filter}-${idx}`}
-              delay={idx * 40}
-              className="group relative rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 bg-white border border-slate-100 cursor-pointer hover:-translate-y-1"
-              onClick={() => setLightbox({ images: filteredItems, index: idx })}
+            <div
+              key={idx}
+              onClick={() => setLightbox(idx)}
+              className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group cursor-pointer border border-slate-100 hover:-translate-y-1"
             >
-              <div className="h-64 overflow-hidden relative">
-                <img src={item.url} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                {/* Hover overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <div className="bg-white/20 backdrop-blur-sm p-3.5 rounded-full border border-white/30 shadow-xl transform scale-75 group-hover:scale-100 transition-transform duration-300">
-                    <ZoomIn size={24} className="text-white" />
-                  </div>
+              <div className="aspect-[4/3] overflow-hidden relative">
+                <img src={item.url} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-5">
+                  <span className="text-white font-bold text-sm flex items-center gap-1.5">
+                    <ZoomIn size={16} /> Click to View
+                  </span>
                 </div>
-                <span className="absolute top-3 left-3 bg-slate-900/85 backdrop-blur-sm text-yellow-400 text-xs font-bold px-3 py-1.5 rounded-full">{item.category}</span>
               </div>
               <div className="p-4">
-                <h3 className="font-bold text-slate-800 text-sm leading-snug">{item.title}</h3>
+                <span className="text-xs text-yellow-600 font-bold uppercase">{item.category}</span>
+                <h4 className="font-bold text-slate-900 text-sm mt-0.5">{item.title}</h4>
               </div>
-            </SectionReveal>
+            </div>
           ))}
         </div>
-
-        {filteredItems.length === 0 && (
-          <div className="text-center py-24 text-slate-400">
-            <p className="text-lg font-semibold">No projects in this category yet.</p>
-          </div>
-        )}
       </div>
+
+      {lightbox !== null && (
+        <Lightbox
+          images={filteredItems}
+          startIndex={lightbox}
+          onClose={() => setLightbox(null)}
+        />
+      )}
     </div>
   );
 };
 
 // --- CONTACT PAGE ---
 const ContactPage = () => {
-  const [formData, setFormData] = useState({ name: '', phone: '', requirement: '' });
+  const [formData, setFormData] = useState({ name: '', phone: '', location: '', requirement: '' });
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.name.trim() || !formData.phone.trim()) return;
-    const msg = `Hi! I'm ${formData.name}. My number: ${formData.phone}. Requirement: ${formData.requirement || 'General enquiry'}`;
+    const msg = `Hi Sri Shanmuga Interiors! I'm ${formData.name}. Phone: ${formData.phone}. Location: ${formData.location || 'Chennai'}. Requirement: ${formData.requirement || 'General enquiry'}`;
     openWA(msg);
     setSubmitted(true);
     setTimeout(() => setSubmitted(false), 4000);
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Banner */}
+    <div className="min-h-screen bg-slate-50 pt-20">
       <div className="bg-slate-900 pt-28 pb-16 text-center relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-600 via-yellow-400 to-yellow-600" />
-        <h1 className="text-5xl font-black text-white mb-3 relative">Contact Us</h1>
-        <p className="text-slate-400 max-w-xl mx-auto text-lg relative">Let's discuss your project. We're just a WhatsApp away.</p>
+        <h1 className="text-4xl sm:text-5xl font-black text-white mb-3 relative">Contact Us</h1>
+        <p className="text-slate-400 max-w-xl mx-auto text-base sm:text-lg relative px-4">
+          Book your free doorstep measurement and site visit. Call <a href={`tel:${PHONE_NUMBER}`} className="text-yellow-400 underline font-bold">{PHONE_NUMBER}</a>.
+        </p>
       </div>
 
       <div className="container mx-auto px-6 py-16">
@@ -871,38 +1083,76 @@ const ContactPage = () => {
           {/* Contact Info */}
           <div className="space-y-6">
             <SectionReveal>
-              <h2 className="text-3xl font-black text-slate-900 mb-6">Get In Touch</h2>
+              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mb-6">Get In Touch Directly</h2>
             </SectionReveal>
             <div className="space-y-4">
               {[
-                { icon: MapPin, label: 'Workshop Address', value: 'Ambattur, Tamil Nadu\n(Thiruvallur District)', color: 'text-red-500', bg: 'bg-red-50' },
-                { icon: Phone, label: 'Call / WhatsApp', value: '+91 99629 19139', color: 'text-green-600', bg: 'bg-green-50' },
-                { icon: Mail, label: 'Email', value: 'contact@srishanmuga.com', color: 'text-blue-500', bg: 'bg-blue-50' },
-                { icon: Clock, label: 'Working Hours', value: 'Monday – Saturday: 9 AM – 7 PM\nSunday: By Appointment', color: 'text-yellow-600', bg: 'bg-yellow-50' },
+                {
+                  icon: Phone, label: 'Call Direct (Quick Consultation)',
+                  value: PHONE_DISPLAY, color: 'text-yellow-600', bg: 'bg-yellow-50',
+                  action: () => callDirect(), actionLabel: 'Call Now'
+                },
+                {
+                  icon: Phone, label: 'WhatsApp Enquiry (Photos & Estimates)',
+                  value: PHONE_DISPLAY, color: 'text-green-600', bg: 'bg-green-50',
+                  action: () => openWA("Hi Sri Shanmuga Interiors, I need a free quote for UPVC interior work."),
+                  actionLabel: 'Message'
+                },
+                {
+                  icon: MapPin, label: 'Workshop Address',
+                  value: 'Ambattur, Chennai – 600053, Tamil Nadu\n(Serving all 23 Chennai service areas)',
+                  color: 'text-red-500', bg: 'bg-red-50'
+                },
+                {
+                  icon: Clock, label: 'Working Hours',
+                  value: 'Monday – Saturday: 9:00 AM – 8:00 PM\nSunday: 10:00 AM – 6:00 PM (Site Visits Available)',
+                  color: 'text-purple-600', bg: 'bg-purple-50'
+                },
               ].map((item, idx) => (
                 <SectionReveal key={idx} delay={idx * 80}>
-                  <div className="flex items-start gap-4 p-5 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                    <div className={`p-3 ${item.bg} rounded-xl shrink-0`}>
-                      <item.icon className={`w-5 h-5 ${item.color}`} />
+                  <div className="flex items-start justify-between gap-4 p-5 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex items-start gap-4">
+                      <div className={`p-3 ${item.bg} rounded-xl shrink-0`}>
+                        <item.icon className={`w-5 h-5 ${item.color}`} />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-slate-900 text-sm mb-0.5">{item.label}</h4>
+                        <p className="text-slate-600 text-sm whitespace-pre-line leading-relaxed font-medium">{item.value}</p>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="font-bold text-slate-900 text-sm mb-0.5">{item.label}</h4>
-                      <p className="text-slate-500 text-sm whitespace-pre-line leading-relaxed">{item.value}</p>
-                    </div>
+                    {item.action && (
+                      <button
+                        onClick={item.action}
+                        className="bg-yellow-400 hover:bg-yellow-300 text-slate-900 px-3.5 py-1.5 rounded-lg text-xs font-black shrink-0 transition-all"
+                      >
+                        {item.actionLabel}
+                      </button>
+                    )}
                   </div>
                 </SectionReveal>
               ))}
             </div>
 
-            {/* Service Areas */}
-            <SectionReveal delay={400}>
-              <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-6">
-                <h3 className="font-black text-slate-900 mb-3 flex items-center gap-2">
-                  <MapPin size={18} className="text-yellow-600" /> Areas We Serve
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {['Ambattur', 'Thiruverkadu', 'Poonamalle', 'Avadi'].map(area => (
-                    <span key={area} className="bg-white border border-yellow-200 text-slate-700 text-sm px-3 py-1.5 rounded-full font-semibold shadow-sm">{area}</span>
+            {/* Service Areas Chips */}
+            <SectionReveal delay={350}>
+              <div className="bg-white border border-yellow-200/80 rounded-2xl p-6 shadow-sm">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-black text-slate-900 flex items-center gap-2 text-base">
+                    <MapPin size={18} className="text-yellow-600" />
+                    23 Service Areas Covered
+                  </h3>
+                  <span className="text-xs font-bold text-green-600 bg-green-50 px-2.5 py-1 rounded-full">Free Site Visit</span>
+                </div>
+                <p className="text-xs text-slate-500 mb-4">Click your neighborhood to request a pre-filled quote:</p>
+                <div className="flex flex-wrap gap-1.5 max-h-56 overflow-y-auto pr-1">
+                  {SERVICE_AREAS.map(area => (
+                    <button
+                      key={area.name}
+                      onClick={() => openWA(`Hi Sri Shanmuga Interiors, I need UPVC interior work in ${area.name}. Please contact me.`)}
+                      className="bg-slate-50 hover:bg-yellow-100 hover:text-slate-900 border border-slate-200 text-slate-700 text-xs px-3 py-1.5 rounded-lg font-semibold transition-colors"
+                    >
+                      {area.name}
+                    </button>
                   ))}
                 </div>
               </div>
@@ -912,51 +1162,71 @@ const ContactPage = () => {
           {/* Enquiry Form */}
           <SectionReveal delay={200} className="bg-white rounded-3xl shadow-xl border border-slate-100 p-8">
             <h3 className="text-2xl font-black text-slate-900 mb-1">Send an Enquiry</h3>
-            <p className="text-slate-400 text-sm mb-7">Fill in your details — we'll WhatsApp you back within minutes.</p>
+            <p className="text-slate-400 text-sm mb-6">Fill in your details — our team will call or WhatsApp you within minutes.</p>
 
             {submitted && (
               <div className="mb-5 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm font-semibold flex items-center gap-2">
-                <CheckCircle size={16} /> Message sent! Opening WhatsApp…
+                <CheckCircle size={16} /> Opening WhatsApp with your enquiry…
               </div>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="text-sm font-bold text-slate-700 mb-1.5 block">Your Name *</label>
+                <label className="text-xs font-bold text-slate-700 mb-1 block">Your Name *</label>
                 <input
                   type="text" required
-                  placeholder="e.g. Rajesh Kumar"
+                  placeholder="e.g. Suresh Kumar"
                   value={formData.name}
                   onChange={e => setFormData(p => ({ ...p, name: e.target.value }))}
-                  className="w-full px-4 py-3.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent bg-slate-50 text-slate-800 font-medium transition-all"
+                  className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-slate-50 text-slate-800 text-sm font-medium transition-all"
                 />
               </div>
-              <div>
-                <label className="text-sm font-bold text-slate-700 mb-1.5 block">Phone Number *</label>
-                <input
-                  type="tel" required
-                  placeholder="e.g. 9876543210"
-                  value={formData.phone}
-                  onChange={e => setFormData(p => ({ ...p, phone: e.target.value }))}
-                  className="w-full px-4 py-3.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent bg-slate-50 text-slate-800 font-medium transition-all"
-                />
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-bold text-slate-700 mb-1 block">Phone Number *</label>
+                  <input
+                    type="tel" required
+                    placeholder="e.g. 9876543210"
+                    value={formData.phone}
+                    onChange={e => setFormData(p => ({ ...p, phone: e.target.value }))}
+                    className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-slate-50 text-slate-800 text-sm font-medium transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-slate-700 mb-1 block">Your Locality / Service Area</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Perambur, Anna Nagar, Porur..."
+                    value={formData.location}
+                    onChange={e => setFormData(p => ({ ...p, location: e.target.value }))}
+                    className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-slate-50 text-slate-800 text-sm font-medium transition-all"
+                  />
+                </div>
               </div>
               <div>
-                <label className="text-sm font-bold text-slate-700 mb-1.5 block">Your Requirement</label>
+                <label className="text-xs font-bold text-slate-700 mb-1 block">Requirement Details</label>
                 <textarea
-                  placeholder="e.g. I need a UPVC kitchen and cupboard for my 2BHK house in Ambattur..."
+                  placeholder="e.g. Looking for a 100% waterproof UPVC modular kitchen & bedroom cupboards..."
                   value={formData.requirement}
                   onChange={e => setFormData(p => ({ ...p, requirement: e.target.value }))}
-                  className="w-full px-4 py-3.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent bg-slate-50 text-slate-800 h-32 resize-none font-medium transition-all"
+                  className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-slate-50 text-slate-800 h-28 resize-none text-sm font-medium transition-all"
                 />
               </div>
-              <button
-                type="submit"
-                className="w-full bg-yellow-400 hover:bg-yellow-300 text-slate-900 font-black py-4 rounded-xl shadow-lg transition-all hover:scale-[1.01] text-base flex items-center justify-center gap-2.5"
-              >
-                <WAIcon className="w-5 h-5" /> Send via WhatsApp
-              </button>
-              <p className="text-center text-xs text-slate-400">Clicking will open WhatsApp with your message pre-filled.</p>
+
+              <div className="grid sm:grid-cols-2 gap-3 pt-2">
+                <button
+                  type="submit"
+                  className="w-full bg-yellow-400 hover:bg-yellow-300 text-slate-900 font-black py-3.5 rounded-xl shadow-lg transition-all hover:scale-[1.01] text-sm flex items-center justify-center gap-2"
+                >
+                  <WAIcon className="w-5 h-5" /> Send via WhatsApp
+                </button>
+                <a
+                  href={`tel:${PHONE_NUMBER}`}
+                  className="w-full bg-slate-900 hover:bg-slate-800 text-yellow-400 font-black py-3.5 rounded-xl shadow-lg transition-all hover:scale-[1.01] text-sm flex items-center justify-center gap-2"
+                >
+                  <Phone size={16} /> Direct Call: {PHONE_NUMBER}
+                </a>
+              </div>
             </form>
           </SectionReveal>
         </div>
@@ -978,24 +1248,36 @@ const ContactPage = () => {
 
 // --- FOOTER ---
 const Footer = ({ navigate }) => (
-  <footer className="bg-slate-900 text-slate-400 pt-16 pb-8 relative">
+  <footer className="bg-slate-950 text-slate-400 pt-16 pb-8 relative">
     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-600 via-yellow-400 to-yellow-600" />
     <div className="container mx-auto px-6">
-      <div className="grid md:grid-cols-4 gap-10 mb-14">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-14">
         {/* Brand */}
-        <div className="md:col-span-2">
-          <div className="flex items-center gap-3 mb-5">
+        <div className="lg:col-span-2 space-y-4">
+          <div className="flex items-center gap-3">
             <img src="/logo.png" alt="Logo" className="h-14 w-14 object-contain bg-white rounded-full p-1 border-2 border-yellow-400/50 shadow-lg" />
-            <span className="text-xl font-black bg-gradient-to-r from-yellow-200 to-yellow-500 text-transparent bg-clip-text">{BRAND_NAME}</span>
+            <div>
+              <span className="text-xl font-black bg-gradient-to-r from-yellow-200 to-yellow-500 text-transparent bg-clip-text block">{BRAND_NAME}</span>
+              <span className="text-xs text-slate-400 font-semibold tracking-wider uppercase">UPVC & PVC Interiors Specialist</span>
+            </div>
           </div>
-          <p className="text-sm leading-relaxed max-w-xs text-slate-500 mb-6">
-            Transforming homes across Thiruvallur District with premium UPVC interiors.
-            Waterproof • Termite-proof • 10-Year Warranty.
+          <p className="text-sm leading-relaxed text-slate-400 max-w-sm">
+            Transforming homes across Chennai with premium UPVC modular kitchens, cupboards, sliding windows & pooja units.
+            100% Waterproof • Termite-Proof • 10-Year Warranty.
           </p>
-          <div className="flex gap-3">
-            <a href="#" className="w-10 h-10 rounded-full bg-slate-800 hover:bg-pink-600 flex items-center justify-center transition-colors" aria-label="Instagram"><Instagram size={16} /></a>
-            <a href="#" className="w-10 h-10 rounded-full bg-slate-800 hover:bg-blue-600 flex items-center justify-center transition-colors" aria-label="Facebook"><Facebook size={16} /></a>
-            <button onClick={() => window.open(`https://wa.me/${WHATSAPP_NUMBER}`, '_blank')} className="w-10 h-10 rounded-full bg-slate-800 hover:bg-green-600 flex items-center justify-center transition-colors" aria-label="WhatsApp">
+
+          <div className="flex flex-col gap-1.5 text-sm pt-1">
+            <a href={`tel:${PHONE_NUMBER}`} className="text-yellow-400 hover:text-yellow-300 font-black flex items-center gap-2">
+              <Phone size={15} /> Direct Call: {PHONE_NUMBER}
+            </a>
+            <p className="text-xs text-slate-400 flex items-center gap-2">
+              <MapPin size={14} className="text-yellow-500" /> Workshop: Ambattur, Chennai – 600053
+            </p>
+          </div>
+
+          <div className="flex gap-3 pt-2">
+            <a href={`tel:${PHONE_NUMBER}`} className="w-10 h-10 rounded-full bg-slate-800 hover:bg-yellow-500 hover:text-slate-950 flex items-center justify-center transition-colors" aria-label="Call"><Phone size={16} /></a>
+            <button onClick={() => openWA(`Hi Sri Shanmuga Interiors, I want a quote.`)} className="w-10 h-10 rounded-full bg-slate-800 hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors" aria-label="WhatsApp">
               <WAIcon className="w-4 h-4" />
             </button>
           </div>
@@ -1005,7 +1287,7 @@ const Footer = ({ navigate }) => (
         <div>
           <h4 className="text-white font-black mb-5 text-xs uppercase tracking-widest">Quick Links</h4>
           <ul className="space-y-3 text-sm">
-            {[['home', 'Home'], ['services', 'Services'], ['gallery', 'Portfolio'], ['contact', 'Contact Us']].map(([page, label]) => (
+            {[['home', 'Home'], ['services', 'Our Services'], ['areas', 'Service Areas (23)'], ['gallery', 'Project Portfolio'], ['contact', 'Contact Us']].map(([page, label]) => (
               <li key={page}>
                 <button onClick={() => { navigate(page); window.scrollTo(0, 0); }} className="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
                   <span className="w-1 h-1 rounded-full bg-yellow-600 group-hover:bg-yellow-400 transition-colors" /> {label}
@@ -1015,28 +1297,40 @@ const Footer = ({ navigate }) => (
           </ul>
         </div>
 
-        {/* Service Areas */}
-        <div>
-          <h4 className="text-white font-black mb-5 text-xs uppercase tracking-widest">Service Areas</h4>
-          <ul className="space-y-2.5 text-sm">
-            {['Ambattur', 'Thiruverkadu', 'Poonamalle', 'Avadi'].map(area => (
-              <li key={area} className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 shrink-0" /> {area}
-              </li>
+        {/* 23 Service Areas Column */}
+        <div className="lg:col-span-2">
+          <h4 className="text-white font-black mb-4 text-xs uppercase tracking-widest flex items-center justify-between">
+            <span>Our 23 Service Areas</span>
+            <span className="text-[10px] text-yellow-400 lowercase">free visit</span>
+          </h4>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-2 gap-y-1.5 text-xs text-slate-400">
+            {SERVICE_AREAS.map(area => (
+              <a
+                key={area.name}
+                href={`tel:${PHONE_NUMBER}`}
+                className="hover:text-yellow-400 transition-colors flex items-center gap-1.5 py-0.5"
+                title={`UPVC interiors in ${area.name}`}
+              >
+                <span className="w-1 h-1 rounded-full bg-yellow-500/70 shrink-0" />
+                <span className="truncate">{area.name}</span>
+              </a>
             ))}
-          </ul>
+          </div>
         </div>
       </div>
 
-      <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-600">
-        <p>© {new Date().getFullYear()} {BRAND_NAME}. All rights reserved.</p>
-        <p className="flex items-center gap-1.5"><MapPin size={12} className="text-yellow-600" /> Serving Thiruvallur District, Tamil Nadu</p>
+      <div className="border-t border-slate-800/80 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
+        <p>© {new Date().getFullYear()} {BRAND_NAME}. All rights reserved. Phone: {PHONE_NUMBER}</p>
+        <p className="flex items-center gap-1.5">
+          <MapPin size={13} className="text-yellow-600" />
+          Serving Perambur, Villivakam, Korattur, Kolathur, Anna nagar, Porur, Madhuravayal & 16+ Chennai Localities
+        </p>
       </div>
     </div>
   </footer>
 );
 
-// --- APP ---
+// --- APP ROOT ---
 const App = () => {
   const [currentPage, setCurrentPage] = useState('home');
   const [selectedService, setSelectedService] = useState(null);
@@ -1062,11 +1356,13 @@ const App = () => {
 
   return (
     <div className="font-sans text-slate-800 min-h-screen">
+      <TopBar />
       <Navbar setPage={navigate} currentPage={currentPage} />
-      <FloatingWAButton />
+      <FloatingActionButtons />
 
       <main className="page-fade">
         {currentPage === 'home' && <HomePage setPage={navigate} setSelectedService={setSelectedService} />}
+        {currentPage === 'areas' && <ServiceAreasSection isFullPage={true} />}
         {currentPage === 'services' && <ServicesPage setSelectedService={setSelectedService} setPage={navigate} />}
         {currentPage === 'service-detail' && <ServiceDetailPage service={selectedService} setPage={navigate} setSelectedService={setSelectedService} />}
         {currentPage === 'gallery' && <GalleryPage />}
@@ -1106,6 +1402,13 @@ const App = () => {
         }
         .animate-marquee { animation: marquee 35s linear infinite; }
         .animate-marquee:hover { animation-play-state: paused; }
+
+        .line-clamp-1 {
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
 
         .line-clamp-2 {
           display: -webkit-box;
