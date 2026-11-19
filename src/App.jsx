@@ -284,23 +284,7 @@ const StatCard = ({ value, suffix, label }) => {
   );
 };
 
-// --- TOP ANNOUNCEMENT BAR ---
-const TopBar = () => (
-  <div className="bg-yellow-400 text-slate-950 text-xs font-black py-2 px-4 shadow-sm relative z-50">
-    <div className="container mx-auto flex flex-col sm:flex-row items-center justify-between gap-1 text-center sm:text-left">
-      <div className="flex items-center gap-2">
-        <span className="bg-slate-950 text-yellow-400 px-2 py-0.5 rounded text-[10px] uppercase font-black">Direct Call</span>
-        <a href={`tel:${PHONE_NUMBER}`} className="hover:underline flex items-center gap-1 font-black text-sm">
-          <Phone size={14} /> {PHONE_NUMBER}
-        </a>
-        <span className="text-slate-800 hidden md:inline">| Free Doorstep Measurement & Estimate</span>
-      </div>
-      <div className="text-[11px] font-bold text-slate-900 truncate max-w-xl">
-        📍 <strong>Service Areas:</strong> Perambur, Villivakam, Korattur, Kolathur, Anna nagar, Porur, Madhuravayal, Kattupakkam & 15+ more
-      </div>
-    </div>
-  </div>
-);
+// TopBar removed per user request
 
 // --- NAVBAR ---
 const Navbar = ({ setPage, currentPage }) => {
@@ -329,7 +313,7 @@ const Navbar = ({ setPage, currentPage }) => {
 
   return (
     <nav className={`fixed w-full z-40 transition-all duration-300 ${
-      scrolled ? 'bg-white/96 backdrop-blur-md shadow-lg py-2.5 top-0' : 'bg-slate-900/90 sm:bg-transparent py-4 top-0 sm:top-8'
+      scrolled ? 'bg-white/96 backdrop-blur-md shadow-lg py-2.5 top-0' : 'bg-slate-900/90 backdrop-blur-sm py-4 top-0'
     }`}>
       <div className="container mx-auto px-6 flex justify-between items-center">
         {/* Logo */}
@@ -487,7 +471,7 @@ const HomePage = ({ setPage, setSelectedService }) => {
   return (
     <>
       {/* ── 1. HERO ── */}
-      <div className="relative min-h-screen w-full overflow-hidden flex flex-col justify-between pt-24 sm:pt-28">
+      <div className="relative min-h-screen w-full overflow-hidden flex flex-col justify-between pt-20 sm:pt-24">
         {HERO_IMAGES.map((img, idx) => (
           <div key={idx} className={`absolute inset-0 transition-opacity duration-1000 ${idx === currentSlide ? 'opacity-100' : 'opacity-0'}`}>
             <img src={img} alt="" className="w-full h-full object-cover" />
@@ -517,37 +501,22 @@ const HomePage = ({ setPage, setSelectedService }) => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3.5 justify-center items-center mb-8">
-              <a
-                href={`tel:${PHONE_NUMBER}`}
-                className="w-full sm:w-auto bg-yellow-400 hover:bg-yellow-300 text-slate-950 px-8 py-4 rounded-full font-black text-base shadow-2xl transition-all hover:scale-105 flex items-center justify-center gap-2"
-              >
-                <Phone size={18} /> Call {PHONE_NUMBER}
-              </a>
-              <button
-                onClick={() => openWA('Hi, I want a free quote for home interior work.')}
-                className="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-full font-black text-base shadow-2xl transition-all hover:scale-105 flex items-center justify-center gap-2"
-              >
-                <WAIcon className="w-5 h-5" /> WhatsApp Quote
-              </button>
               <button
                 onClick={() => setPage('gallery')}
-                className="w-full sm:w-auto border-2 border-white/40 hover:border-yellow-400 text-white hover:text-yellow-400 px-7 py-3.5 rounded-full font-bold text-base backdrop-blur-sm transition-all hover:bg-white/5"
+                className="w-full sm:w-auto bg-yellow-400 hover:bg-yellow-300 text-slate-950 px-10 py-4 rounded-full font-black text-base shadow-2xl transition-all hover:scale-105 flex items-center justify-center gap-2"
               >
                 View Our Work
               </button>
+              <a
+                href={`tel:${PHONE_NUMBER}`}
+                className="w-full sm:w-auto border-2 border-white/40 hover:border-yellow-400 text-white hover:text-yellow-400 px-7 py-3.5 rounded-full font-bold text-base backdrop-blur-sm transition-all hover:bg-white/5 flex items-center justify-center gap-2"
+              >
+                <Phone size={16} /> Call {PHONE_NUMBER}
+              </a>
             </div>
           </div>
         </div>
 
-        {/* Floating Quick Stat Bar */}
-        <div className="relative z-10 container mx-auto px-6 pb-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <StatCard value={10} suffix=" Years" label="Written Warranty" />
-            <StatCard value={500} suffix="+" label="Finished Projects" />
-            <StatCard value={23} suffix=" Areas" label="Service Locations" />
-            <StatCard value={100} suffix="%" label="Water & Termite Proof" />
-          </div>
-        </div>
       </div>
 
       {/* ── 2. WHY CHOOSE US ── */}
@@ -1236,7 +1205,6 @@ const App = () => {
 
   return (
     <div className="font-sans text-slate-800 min-h-screen">
-      <TopBar />
       <Navbar setPage={navigate} currentPage={currentPage} />
       <FloatingActionButtons />
 
